@@ -1,0 +1,71 @@
+* { margin: 0; padding: 0; border: 0; }
+html, body { height: 100%; font-family: calluna-1,calluna-2,serif; font-size: 1.0em; }
+::selection { color:#fff; background-color: #e95155; }
+
+header, footer, article { display:block; }
+header#on-top { height: 1em; background-color: #e3e3e3; border-bottom: 1px solid #ccc; }
+
+div#main { min-height: 100%; }
+   div#content { margin: auto; width: 780px; padding: 2em 0; }
+      /* h1 { background-color: #c3c3c3; -webkit-background-clip: text; color: transparent; text-shadow: rgba(255,255,255,0.5) 0px 2px 2px; font-family: angie-sans-1,angie-sans-2,sans-serif; font-weight: bold; font-size: 2.8em; } */
+      h1 { color: transparent; background: url('/images/name.png') -2px 4px no-repeat; font-size: 2.8em; font-family: angie-sans-1,angie-sans-2,serif; font-weight: bold; }
+      nav { padding: 0.1em 0; }
+         a { color: #a9a9a9; text-decoration: none; }
+         a.active, a:hover { color: #3a6579; }
+         nav ul { list-style: none; }
+         nav ul li { float: left; padding: 0 0.3em; color: #a9a9a9; font-size: 1.1em; letter-spacing: 0.1em; }
+         nav ul li.even { color: #d9d9d9; }
+         nav ul li:first-child { padding:0; padding-left: 0.18em; padding-right: 0.3em; }
+      div#page-header { float:right; width: 66%; margin-top: -0.7em; }
+         div#page-header hr { width: 480px; height: 1px; border: 0; color: #e3e3e3; background-color: #e3e3e3; }
+         div#page-header p.signature { float: right; color: #a92c32; font-family: lourdes-1,lourdes-2; font-size: 1.2em; font-style: oblique; margin-top: -0.5em; margin-right: 2.5em; background-color: white; padding: 0 0.5em; }
+      section { overflow:auto; padding-bottom: 3em; clear: both; }
+         section ul { list-style: none; margin-top: 2.2em; width: 80%; }
+            section ul li { clear: both; display: block; margin-top: 1.9em; padding: 0.3em; line-height: 1.5em; border-top: 1px solid #efefef; }
+            section ul li a { float: left; display: block; margin: 0.3em 0.5em; color: #999; }
+            section ul li a:hover { color: #3a6579; }
+            section ul li p { text-align: right; font-size: 1em; font-style: oblique; color: #999; }
+            section ul li p a { float:none; display: inline; margin: 0; color: #a92c32; }
+            section ul li p a:hover { color: #692b00; }
+            section ul li span.circle { float:left; display: block; width: 1.1em; height: 1.3em; background: #333; border-radius: 1.5em; -moz-border-radius: 1.5em; -webkit-border-radius: 1.5em; font-family: calluna-1,calluna-2,sans-serif; font-size: 1.2em; color: #fff; padding: 0.25em 0.25em 0.15em 0.3em; }
+            section ul li:hover span.circle { background-color: #d45227; }
+         section#archive article { display: block; float: left; margin-top: 2.3em; width: 49%; text-align: center; }
+            section#archive article header { font-size: 1.2em; color: #595959; }
+               section#archive article header a { color: #987041; }
+               section#archive article header a:hover { color: #93a1ac; }
+            section#archive article p { font-size: 1.0em; font-style: oblique; color: #c3c3c3; padding-top: 0.4em; }
+         section article#featured { margin-top: 2.3em; width: 90%; }
+            section article#featured header { color: #a92c32; font-size: 2.3em; }
+            section article#featured p.brief { font-size: 1.5em; line-height: 1.4em; color: #999; padding-top: 0.7em; }
+               section article#featured p.brief a { color: #3a6579; }
+               section article#featured p.brief a:hover { color: #33394c; }
+         section article#detail { margin-top: 2.3em; width: 90%; }
+            section article#detail header { color: #a92c32; font-size: 2.3em; }
+            section article#detail h2 { margin-top: 1.6em; }
+            section article#detail h3 { margin-top: 1.6em; }
+            section article#detail p { font-size: 1.2em; line-height: 1.4em; color: #464646; padding-top: 1.6em; clear: both; text-align: justify; }
+               section article#detail p.brief { font-size: 1.5em; color: #999; padding-top: 0.7em; }
+               section article#detail p.date { margin-left: 0.2em; padding-top: 0; font-size: 1.2em; font-style: oblique; color: #987041; }
+               section article#detail p.image { text-align: center; line-height: 1em; }
+                  section article#detail p.image img { padding: 0.5em; box-shadow: 0 0 5px 5px #e9e9e9; }
+                  section article#detail p.image small { display: block; padding-top: 0.5em; font-size: 0.8em; text-align: center; }
+               section article#detail p.video { float: left; margin: 1.3em 0 0 1.1em; padding: 0.5em 0.5em 0 0.5em; box-shadow: 0 0 5px 5px #e9e9e9; }
+               section article#detail p a { font-weight: bold; color: #0477bf; }
+               section article#detail p a:hover { color: #196674; }
+               section article#detail p strong { font-weight: bold; color: #474747; }
+               section article#detail p em { font-style: oblique; color: #939393 }
+               section article#detail p span.highlight { background-color: #ebeaff; padding: 0.3em 0.4em 0.2em 0.4em; border-radius: 0.5em; -moz-border-radius: 0.5em; -webkit-border-radius: 0.5em; }
+               section article#detail p span.underline { text-decoration: underline; }
+               section article#detail p abbr { background-color: #ebeaff; padding: 0.3em 0.4em 0.2em 0.4em; border-radius: 0.5em; -moz-border-radius: 0.5em; -webkit-border-radius: 0.5em; }
+            section article#detail pre { position: relative; margin: 1.6em 0 0 0.4em; padding: 0.7em; border:0; border-top: 1px solid #eee; border-bottom: 1px solid #eee; width: 95%; overflow: auto; }
+            section article#detail blockquote { font-size: 1.1em; font-style: oblique; line-height: 1.6em; color: #999; padding: 1.2em; margin: 1.6em auto 0 auto; width: 80%; border-top: 1px solid #ddd; border-bottom: 1px solid #ddd; }
+               section article#detail blockquote p.author { text-align: right; font-size: 1.0em; font-style: normal; color: #474747; padding-top: 1.6em; }
+            section article#detail ul { list-style: none; margin: 1.6em 0 0 1.6em; border-bottom: 1px solid #eee; width: 90%; }
+               section article#detail ul li:before { content: "\25c6"; color: #6e7e83; margin-right: 0.5em; }
+               section article#detail ul li { text-indent: 0.5em; font-size: 1.2em; line-height: 1.4em; color: #464646; padding-top: 0.2em; border-top: 1px solid #eee; }
+            section article#detail ol { list-style: none; counter-reset: item; margin: 1.6em 0 0 1.6em; border-bottom: 1px solid #eee; width: 90%; }
+               section article#detail ol li:before { content: counter(item) ". "; counter-increment: item; color: #6e7e83; margin-right: 0.5em; }
+               section article#detail ol li { text-indent: 0.5em; font-size: 1.2em; line-height: 1.4em; color: #464646; padding-top: 0.2em; border-top: 1px solid #eee; }
+         section div#disqus_thread { padding-top: 1.6em; width: 90%; }
+footer { position: relative; margin-top: -3em; height: 3em; clear:both; background-color: #e3e3e3; border-top: 1px solid #ccc; }
+   footer p { line-height: 4em; font-size: 0.8em; text-align: center; color: #999; }
