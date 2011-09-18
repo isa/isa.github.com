@@ -34,7 +34,7 @@
 #
 
 # With no layout
-# page "/path/to/file.html", :layout => false
+page "/articles*", :layout => :articles_layout
 #
 # With alternative layout
 # page "/path/to/file.html", :layout => :otherlayout
@@ -54,11 +54,11 @@
 ###
 
 # Methods defined in the helpers block are available in templates
-# helpers do
-#   def some_helper
-#     "Helping"
-#   end
-# end
+helpers do
+   def create_archive_page
+      "Helping"
+   end
+end
 
 # Change the CSS directory
 # set :css_dir, "alternative_css_directory"
@@ -70,7 +70,7 @@
 # set :images_dir, "alternative_image_directory"
 
 require "redcarpet"
-set :markdown, :layout_engine => :erb
+set :markdown, :layout_engine => :erb, :pretty => true
 set :markdown_engine, Middleman::CoreExtensions::FrontMatter::RedcarpetTemplate
 
 require 'rack/codehighlighter'
@@ -92,6 +92,9 @@ configure :build do
 
   # Enable cache buster
   activate :cache_buster
+
+  # Enable directory indexes for Apache
+  activate :directory_indexes
 
   # Use relative URLs
   # activate :relative_assets
