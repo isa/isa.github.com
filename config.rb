@@ -1,79 +1,42 @@
-###
-# Compass
-###
+require 'htmlentities'
+require "redcarpet"
+require 'find'
+require 'date'
+require 'rack/codehighlighter'
 
-# Susy grids in Compass
-# First: gem install compass-susy-plugin
-# require 'susy'
+class Article
+   attr_reader :title, :link, :date
 
-# Change Compass configuration
-# compass_config do |config|
-#   config.output_style = :compact
-# end
+   def initialize(title, link, date)
+      @title = title
+      @link = link
+      @date = date
+   end
 
-###
-# Haml
-###
-
-# CodeRay syntax highlighting in Haml
-# First: gem install haml-coderay
-# require 'haml-coderay'
-
-# CoffeeScript filters in Haml
-# First: gem install coffee-filter
-# require 'coffee-filter'
-
-# Automatic image dimensions on image_tag helper
-# activate :automatic_image_sizes
-
-###
-# Page command
-###
-
-# Per-page layout changes:
-#
-
-# With no layout
-page "/articles*", :layout => :articles_layout
-#
-# With alternative layout
-# page "/path/to/file.html", :layout => :otherlayout
-#
-# A path which all have the same layout
-# with_layout :admin do
-#   page "/admin/*"
-# end
-
-# Proxy (fake) files
-# page "/this-page-has-no-template.html", :proxy => "/template-file.html" do
-#   @which_fake_page = "Rendering a fake page with a variable"
-# end
-
-###
-# Helpers
-###
-
-# Methods defined in the helpers block are available in templates
-helpers do
-   def create_archive_page
-      "Helping"
+   def title
+      HTMLEntities.new.encode(@title)
    end
 end
 
-# Change the CSS directory
-# set :css_dir, "alternative_css_directory"
+helpers do
+   def create_articles_list
+      articles = []
+      Dir.glob("./source/20*/**/*.*").each do |file|
+         content = File.open(file, "r").read
+         title = /<header>(.*)<\/header>/i.match(content)[1]
+         date = /<p class="date">&rsaquo; (.*)<\/p>/i.match(content)[1]
+         link = /.\/source(.*).html.markdown/i.match(file)[1] + '/'
+         articles.push(Article.new(title, link, date))
+      end
+      articles.sort_by { |a| [-DateTime.parse(a.date).to_time.to_i, a.title] }
+   end
+end
 
-# Change the JS directory
-# set :js_dir, "alternative_js_directory"
+page "/articles*", :layout => :articles_layout
 
-# Change the images directory
-# set :images_dir, "alternative_image_directory"
-
-require "redcarpet"
 set :markdown, :layout_engine => :erb, :pretty => true
 set :markdown_engine, Middleman::CoreExtensions::FrontMatter::RedcarpetTemplate
 
-require 'rack/codehighlighter'
 use Rack::Codehighlighter,
    :ultraviolet,
    :theme => "idle",
@@ -82,28 +45,9 @@ use Rack::Codehighlighter,
    :pattern => /\A:::([-_+\w]+)\s*\n/,
    :logging => false
 
-# Build-specific configuration
 configure :build do
-  # For example, change the Compass output style for deployment
   activate :minify_css
-
-  # Minify Javascript on build
   activate :minify_javascript
-
-  # Enable cache buster
   activate :cache_buster
-
-  # Enable directory indexes for Apache
   activate :directory_indexes
-
-  # Use relative URLs
-  # activate :relative_assets
-
-  # Compress PNGs after build
-  # First: gem install middleman-smusher
-  #require "middleman-smusher"
-  #activate :smusher
-
-  # Or use a different image path
-  # set :http_path, "/Content/images/"
 end

@@ -10,30 +10,12 @@
          <div id="content">
             <%= partial "menu" %>
             <section id="archive">
-               <article>
-                  <header><a href="#">How to Optimize Java 7</a></header>
-                  <p>August 24th, 2010</p>
-               </article>
-               <article>
-                  <header><a href="#">Occam&apos;s Razor</a></header>
-                  <p>July 11th, 2010</p>
-               </article>
-               <article>
-                  <header><a href="#">JUnit Datapoint and Annotations</a></header>
-                  <p>March 20th, 2010</p>
-               </article>
-               <article>
-                  <header><a href="#">Many Articles and Still Posting</a></header>
-                  <p>February 13th, 2010</p>
-               </article>
-               <article>
-                  <header><a href="#">Occam&apos;s Razor</a></header>
-                  <p>July 11th, 2010</p>
-               </article>
-               <article>
-                  <header><a href="#">How to Optimize Java 7</a></header>
-                  <p>August 24th, 2010</p>
-               </article>
+               <% create_articles_list.each do |article| %>
+                  <article>
+                     <header><a href="<%= article.link %>"><%= article.title %></a></header>
+                     <p><%= article.date %></p>
+                  </article>
+               <% end %>
             </section>
          </div>
       </div>
