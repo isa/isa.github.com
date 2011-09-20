@@ -1,0 +1,12 @@
+doctype html
+html
+   == partial "head"
+
+   body
+      #main
+         header id="on-top"
+         #content
+            == partial "menu"
+            section(id="articles")
+               == yield
+      == partial "footer"

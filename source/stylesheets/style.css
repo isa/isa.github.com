@@ -1,5 +1,5 @@
 * { margin: 0; padding: 0; border: 0; }
-html, body { height: 100%; font-family: calluna-1,calluna-2,serif; font-size: 1.0em; }
+html, body { height: 100%; font-family: calluna-1,calluna-2,serif; font-size: 100%; }
 ::selection { color:#fff; background-color: #e95155; }
 
 header, footer, article { display:block; }
@@ -57,15 +57,15 @@ div#main { min-height: 100%; }
                section article#detail p span.highlight { background-color: #ebeaff; padding: 0.3em 0.4em 0.2em 0.4em; border-radius: 0.5em; -moz-border-radius: 0.5em; -webkit-border-radius: 0.5em; }
                section article#detail p span.underline { text-decoration: underline; }
                section article#detail p abbr { background-color: #ebeaff; padding: 0.3em 0.4em 0.2em 0.4em; border-radius: 0.5em; -moz-border-radius: 0.5em; -webkit-border-radius: 0.5em; }
-            section article#detail pre { position: relative; margin: 1.6em 0 0 0.4em; padding: 0.7em; border:0; border-top: 1px solid #eee; border-bottom: 1px solid #eee; width: 95%; overflow: auto; }
+            section article#detail pre { position: relative; margin: 1.6em 0 0 0.4em; padding: 0.7em; font-family: Monaco, Consolas, monospace; font-size: 0.8em; line-height: 1.6em; background: url('/images/pre-bg.png') repeat 0 1px; border:0; border-top: 1px solid #eee; border-bottom: 1px solid #eee; width: 95%; overflow: auto; white-space: pre-wrap; white-space: -moz-pre-wrap !important; white-space: -pre-wrap; white-space: -o-pre-wrap; word-wrap: break-word; }
             section article#detail blockquote { font-size: 1.1em; font-style: oblique; line-height: 1.6em; color: #999; padding: 1.2em; margin: 1.6em auto 0 auto; width: 80%; border-top: 1px solid #ddd; border-bottom: 1px solid #ddd; }
                section article#detail blockquote p.author { text-align: right; font-size: 1.0em; font-style: normal; color: #474747; padding-top: 1.6em; }
             section article#detail ul { list-style: none; margin: 1.6em 0 0 1.6em; border-bottom: 1px solid #eee; width: 90%; }
                section article#detail ul li:before { content: "\25c6"; color: #6e7e83; margin-right: 0.5em; }
-               section article#detail ul li { text-indent: 0.5em; font-size: 1.2em; line-height: 1.4em; color: #464646; padding-top: 0.2em; border-top: 1px solid #eee; }
+               section article#detail ul li { text-indent: 0.5em; margin-top: 0; font-size: 1.2em; line-height: 1.4em; color: #464646; padding-top: 0.2em; border-top: 1px solid #eee; }
             section article#detail ol { list-style: none; counter-reset: item; margin: 1.6em 0 0 1.6em; border-bottom: 1px solid #eee; width: 90%; }
                section article#detail ol li:before { content: counter(item) ". "; counter-increment: item; color: #6e7e83; margin-right: 0.5em; }
                section article#detail ol li { text-indent: 0.5em; font-size: 1.2em; line-height: 1.4em; color: #464646; padding-top: 0.2em; border-top: 1px solid #eee; }
          section div#disqus_thread { padding-top: 1.6em; width: 90%; }
 footer { position: relative; margin-top: -3em; height: 3em; clear:both; background-color: #e3e3e3; border-top: 1px solid #ccc; }
-   footer p { line-height: 4em; font-size: 0.8em; text-align: center; color: #999; }
+   footer p { line-height: 2em; padding-top: 1em; font-size: 0.8em; text-align: center; color: #999; }

@@ -1,0 +1,16 @@
+doctype html
+html
+   == partial "head"
+
+   body
+      #main
+         header id="on-top"
+         #content
+            == partial "menu"
+            section(id="archive")
+               - for article in create_articles_list do
+                  article
+                     header
+                        a href="#{article.link}" #{article.title}
+                     p #{article.date}
+      == partial "footer"

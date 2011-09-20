@@ -1,7 +1,6 @@
-require 'htmlentities'
-require "redcarpet"
 require 'find'
 require 'date'
+require 'uv'
 require 'rack/codehighlighter'
 
 class Article
@@ -12,38 +11,38 @@ class Article
       @link = link
       @date = date
    end
-
-   def title
-      HTMLEntities.new.encode(@title)
-   end
 end
 
 helpers do
    def create_articles_list
       articles = []
-      Dir.glob("./source/20*/**/*.*").each do |file|
+      Dir.glob("./source/20*/**/*.slim").each do |file|
          content = File.open(file, "r").read
-         title = /<header>(.*)<\/header>/i.match(content)[1]
-         date = /<p class="date">&rsaquo; (.*)<\/p>/i.match(content)[1]
-         link = /.\/source(.*).html.markdown/i.match(file)[1] + '/'
+         title = /header (.*)/i.match(content)[1]
+         date = /p class="date" &rsaquo; (.*)/i.match(content)[1]
+         link = /.\/source(.*).html.slim/i.match(file)[1] + '/'
          articles.push(Article.new(title, link, date))
       end
       articles.sort_by { |a| [-DateTime.parse(a.date).to_time.to_i, a.title] }
    end
 end
 
-page "/articles*", :layout => :articles_layout
-
-set :markdown, :layout_engine => :erb, :pretty => true
-set :markdown_engine, Middleman::CoreExtensions::FrontMatter::RedcarpetTemplate
+page "/articles*", :layout => :layout_article_list
+page "/20*", :layout => :layout_entry
+set :slim, :pretty => true
 
 use Rack::Codehighlighter,
    :ultraviolet,
    :theme => "idle",
    :lines => false,
    :element => "pre",
-   :pattern => /\A:::([-_+\w]+)\s*\n/,
+   :pattern => /\A::([-_+\w]+)::\s*/,
    :logging => false
+
+# use Rack::Codehighlighter, :ultraviolet, :markdown => true,
+#   :theme => "minimal_theme", :lines => false, :element => "pre>code",
+#   :pattern => /\A:::([-_+\w]+)\s*(\n|&#x000A;)/, :logging => false,
+#   :themes => {"vibrant_ink" => ["ruby"], "upstream_sunburst" => ["objective-c", "java"]}
 
 configure :build do
   activate :minify_css

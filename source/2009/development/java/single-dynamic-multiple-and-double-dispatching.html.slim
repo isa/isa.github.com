@@ -1,0 +1,220 @@
+article#detail
+   header Single, Dynamic, Multiple and Double Dispatching
+   p.date &rsaquo; December 7, 2009
+
+   p.brief
+      ' Today I was reading couple articles about programming languages and I noticed that there is still some confusion about dispatching.
+        So I'll try to explain as much as I can. Everbody is welcome to correct!
+
+   h2 What is Dispatching?
+
+   p
+      ' This is also just another
+      abbr OOP
+      '  term. It's not valid outside of the
+      abbr OOP
+      '  context.
+        I'm not gonna dive into linguistic details. Basically, it's an invocation of a function on a
+        specific type as in
+      em object.function(with params)
+      | . For more details you can #wiki it. There are 3 types of dispatching mechanism:
+
+   ul
+      li Single/Dynamic Dispatching
+      li Multiple Dispatching
+      li Double Dispatching
+
+   p
+      ' You might also find 2 other topics related to this subject, but I’m not gonna cover them today.
+        You can quickly #wiki it:
+      == link_to 'Monkey Patching', 'http://en.wikipedia.org/wiki/Monkey_patching'
+      '  and
+      == link_to 'Duck Typing', 'http://en.wikipedia.org/wiki/Duck_typing'
+      | . Anyways, so let’s get back to our subject:
+
+   h2 Single/Dynamic Dispatching
+
+   p
+      ' Although there is a subtle difference between them, I covered these 2 topics under the same title.
+        So basically, when you invoke a function on a type, it’s called single dispatch as in:
+
+   pre
+      | ::java::
+        class Messenger {
+           public void send(String message) { }
+        }
+
+        Messenger messenger = new Messenger();
+        messenger.send("Hello World");
+
+   p
+      ' If there is no polymorphic structure, compiler knows this at compile time. There can be multiple
+      strong send
+      '  functions under different types (classes). Compiler binds them to the correct ones in the compile time:
+
+   pre
+      | ::java::
+        class Messenger {
+           public void send(String message) { }
+        }
+
+        class SMSGateway {
+           public void send(String sms) { }
+        }
+
+        Messenger messenger = new Messenger();
+        messenger.send("Hello World");
+
+        SMSGateway gateway = new SMSGateway();
+        gateway.send("Cya in 10!");
+
+   p
+      ' In above example, compiler bound
+      strong send(message)
+      '  to
+      em Messenger
+      '  and
+      strong send(sms)
+      '  to
+      em SMSGateway
+      '  types. These are all single dispatch examples. No dynamic dispatching needed so far.
+        However, if you have a polymorphic structure as in:
+
+   pre
+      ' ::java::
+        interface Messenger {
+           void send(String message);
+        }
+        class TextMessenger implements Messenger {
+           public void send(String message) {
+              System.out.println("TEXT: " + message);
+           }
+        }
+        class XMLMessenger implements Messenger {
+           public void send(String message) {
+              System.out.println("<message>" + message + "</message>");
+           }
+        }
+        class Demo {
+           public void useMessenger(Messenger messenger) {
+              messenger.send("Which messenger am I using?");
+           }
+        }
+
+   p
+      ' As you may quickly notice, this requires dynamic dispatching (run-time decision) since compiler
+        cannot decide the actual type of the messenger which
+      em Demo.useMessenger
+      '  uses. Lots of known design patterns are already based on this mechanism (Strategy, Bridge, etc..).
+        Again I'm not going go into details, you can find more information about this on
+      == link_to "Single/Dynamic Dispatch", "http://en.wikipedia.org/wiki/Single_dispatch"
+      '  and
+      == link_to "Single Dispatch", "http://c2.com/cgi/wiki?SingleDispatch"
+      '  /
+      == link_to "Dynamic Dispatch", "http://c2.com/cgi/wiki?DynamicDispatch"
+      ' .
+
+   h2 Multiple Dispatching
+
+   p
+      ' Roughly it is the idea behind overloading in most programming languages. Your type has so many
+        functions with the same name, but they all have different parameters.
+
+   pre
+      ' ::java::
+        class Messenger {
+           public void send(String message) { }
+           public void send(String message, Person to) { }
+           public void send(String message, String subject, Person to) { }
+        }
+
+   p
+      ' You can figure out how it would work. However multiple dispatching is not just about this.
+        I guess overloading example is misleading too. Anyways, let's consider following example:
+
+   pre
+      ' ::java::
+        interface Messenger {
+           void send(String message);
+        }
+        class TextMessenger implements Messenger {
+           public void send(String message) {
+              System.out.println("TEXT: " + message);
+           }
+        }
+        class XMLMessenger implements Messenger {
+           public void send(String message) {
+              System.out.println("<message>" + message + "</message>");
+           }
+        }
+        class Demo {
+           public void useMessenger(Messenger messenger) {
+              messenger.send("Which messenger am I using?");
+           }
+           public void useMessenger(TextMessenger messenger) {
+              messenger.send("I'm TextMessenger for sure, but?");
+           }
+        }
+
+   p
+      ' So what do you think will happen when I try to invoke
+      em Demo.useMessenger
+      '  with a
+      em TextMessenger
+      ' . If your language doesn't support true multiple dispatch mechanism, you'll always end up invoking
+      em useMessenger(Messenger)
+      '  function no matter what you provide. With true multiple dispatching, you'll invoke
+      em useMessenger(TextMessenger)
+      '  when you provide
+      em TextMessenger
+      '  to the function. More information
+      == link_to "Multiple Dispatch", "http://en.wikipedia.org/wiki/Multiple_dispatch"
+      '  or
+      == link_to "Multiple Dispatch", "http://c2.com/cgi/wiki?MultipleDispatch"
+      ' . BTW,
+      strong Java
+      '  doesn't support true multiple dispatching, so don't cause any bugs while creating overloaded methods.
+
+   h2 Double Dispatching
+
+   p
+      ' Well this one is pretty cool. Some define this as true dispatching :) Anyways, to me all of them
+        are true :) In real world, all relations are actually two-way. It's not only you're telling
+        somebody about something, he/she is also listening to you. Double dispatching is like this:
+        two-way. Visitor pattern is actually good way of explaining this topic. Let's look at the
+        following example:
+
+   pre
+      ' ::java::
+        // messenger
+        interface Messenger {
+           void send(Message message);
+        }
+        class TextMessenger implements Messenger {
+           public void send(Message message) {
+              // some custom operations
+              message.print(this);
+           }
+        }
+        class XMLMessenger implements Messenger {
+           public void send(Message message) {
+              // some other custom operations
+              message.print(this);
+           }
+        }
+        // and message
+        class Message {
+            public void print(TextMessenger messenger) {
+              // do something
+            }
+            public void print(XMLMessenger messenger) {
+              // do some other thing
+            }
+        }
+
+   p
+      ' As you can easily see, objects are related to each-other both ways.
+      em Message
+      '  is deciding to do something based on other types.
+
+   p Hope this clarifies things a bit more.
