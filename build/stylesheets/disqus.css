@@ -1,6 +1,8 @@
+div.dsq-textarea { margin-left: 0; }
 div.dsq-textarea-background { background: none; border-radius: 2px 2px 2px 2px; box-shadow: 0 1px 2px rgba(0, 0, 0, 0.16) inset; }
 div.dsq-textarea-wrapper iframe * { font-size: 1.2em; color: #888; }
 div.dsq-comment-header { font-size: 0.9em; line-height: 1em; border: 1px solid #ddd; padding-top: 0.8em; padding-bottom: 0.6em; }
+div.dsq-reply > div.dsq-avatar { display: none; }
 select#dsq-sort-select { width: 220px; border:1px solid #eee; padding: 0.2em; font-size: 0.8em; }
 ul.dsq-comment-meta li a { font-style: oblique; color: #aaa; }
    a.dsq-commenter-name { color: #724c13; }
