@@ -1,0 +1,197 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<meta charset="utf-8">
+<meta content="Isa Goksu's Blog" name="description">
+<meta content="Isa Goksu" name="author">
+<!--[if lt IE 9]><script src="http://html5shim.googlecode.com/svn/trunk/html5.js">
+    </script><![endif]--><meta content="IE=edge,chrome=1" http-equiv="X-UA-Compatible">
+<link href="/images/favicon.png" rel="icon" type="image/png">
+<link type="text/css" rel="stylesheet" media="all" href="/stylesheets/style.css?1316563386">
+<link type="text/css" rel="stylesheet" media="all" href="/stylesheets/firefox.css?1316563354">
+<link type="text/css" rel="stylesheet" media="all" href="/stylesheets/opera.css?1316502856">
+<link type="text/css" rel="stylesheet" media="all" href="/stylesheets/idle.css?1316475260">
+<link type="text/css" rel="stylesheet" media="all" href="/stylesheets/disqus.css?1316556855">
+<script src="http://use.typekit.com/vew8tjo.js" type="text/javascript">
+    </script><script type="text/javascript">try{Typekit.load();}catch(e){}</script><script src="https://ajax.googleapis.com/ajax/libs/jquery/1.6.3/jquery.min.js" type="text/javascript">
+    </script><script type="text/javascript">$(document).ready(function() {
+         $(function(){
+            $("pre").hover(function() {
+               var codeInnerWidth = $("code", this).width() + 10;
+               if (codeInnerWidth > 640) {
+                  $(this).stop(true, false).css({zIndex:"99",position:"relative",overflow:"hidden"}).animate({width:codeInnerWidth+"px"});
+               }
+            }, function() {
+               $(this).stop(true, false).animate({width:640});
+            });
+         });
+      });</script><title>Simple and Pragmatic Thoughts by Isa Goksu</title>
+</head>
+<body>
+    <div id="main">
+      <header id="on-top"></header><div id="content">
+<h1>ISAGOKSU</h1>
+        <nav id="menu"><ul>
+<li>
+              <a class="active" href="/">home</a>
+            </li>
+            <li class="even">/</li>
+            <li>
+              <a href="https://github.com/isa">projects</a>
+            </li>
+            <li class="even">/</li>
+            <li>
+              <a href="http://zerp.ly/IsaGoksu">about</a>
+            </li>
+          </ul></nav><div id="page-header">
+          <hr class="signature-line">
+<p class="signature">ig</p>
+        </div>
+<section id="articles"><article id="detail"><header>Single, Dynamic, Multiple and Double Dispatching</header><p class="date">› December 7, 2009</p>
+  <p class="brief">Today I was reading couple articles about programming languages and I noticed that there is still some confusion about dispatching.
+    So I'll try to explain as much as I can. Everbody is welcome to correct! </p>
+  <h2>What is Dispatching?</h2>
+  <p>This is also just another <abbr>OOP</abbr> term. It's not valid outside of the <abbr>OOP</abbr> context.
+    I'm not gonna dive into linguistic details. Basically, it's an invocation of a function on a
+    specific type as in <em>object.function(with params)</em>. For more details you can #wiki it. There are 3 types of dispatching mechanism:</p>
+  <ul>
+<li>Single/Dynamic Dispatching</li>
+    <li>Multiple Dispatching</li>
+    <li>Double Dispatching</li>
+  </ul>
+<p>You might also find 2 other topics related to this subject, but I’m not gonna cover them today.
+    You can quickly #wiki it: <a href="http://en.wikipedia.org/wiki/Monkey_patching">Monkey Patching</a> and <a href="http://en.wikipedia.org/wiki/Duck_typing">Duck Typing</a>. Anyways, so let’s get back to our subject:</p>
+  <h2>Single/Dynamic Dispatching</h2>
+  <p>Although there is a subtle difference between them, I covered these 2 topics under the same title.
+    So basically, when you invoke a function on a type, it’s called single dispatch as in: </p>
+  <pre class="idle"><span class="Storage">class</span> <span class="TypeName">Messenger</span> {
+   <span class="Storage">public </span><span class="Storage">void</span> <span class="FunctionName">send</span>(<span class="LibraryClassType">String</span> message) { }
+}
+
+<span class="Storage">Messenger</span> messenger = <span class="Keyword">new</span> <span class="Storage">Messenger</span>();
+messenger.send(<span class="String"><span class="String">"</span>Hello World<span class="String">"</span></span>);
+</pre>
+  <p>If there is no polymorphic structure, compiler knows this at compile time. There can be multiple <strong>send</strong> functions under different types (classes). Compiler binds them to the correct ones in the compile time: </p>
+  <pre class="idle"><span class="Storage">class</span> <span class="TypeName">Messenger</span> {
+   <span class="Storage">public </span><span class="Storage">void</span> <span class="FunctionName">send</span>(<span class="LibraryClassType">String</span> message) { }
+}
+
+<span class="Storage">class</span> <span class="TypeName">SMSGateway</span> {
+   <span class="Storage">public </span><span class="Storage">void</span> <span class="FunctionName">send</span>(<span class="LibraryClassType">String</span> sms) { }
+}
+
+<span class="Storage">Messenger</span> messenger = <span class="Keyword">new</span> <span class="Storage">Messenger</span>();
+messenger.send(<span class="String"><span class="String">"</span>Hello World<span class="String">"</span></span>);
+
+<span class="Storage">SMSGateway</span> gateway = <span class="Keyword">new</span> <span class="Storage">SMSGateway</span>();
+gateway.send(<span class="String"><span class="String">"</span>Cya in 10!<span class="String">"</span></span>); 
+</pre>
+  <p>In above example, compiler bound <strong>send(message)</strong> to <em>Messenger</em> and <strong>send(sms)</strong> to <em>SMSGateway</em> types. These are all single dispatch examples. No dynamic dispatching needed so far.
+    However, if you have a polymorphic structure as in: </p>
+  <pre class="idle"><span class="Storage">interface</span> <span class="TypeName">Messenger</span> {
+   <span class="Storage">void</span> send(<span class="LibraryClassType">String</span> message);
+}
+<span class="Storage">class</span> <span class="TypeName">TextMessenger</span> <span class="Storage">implements</span> <span class="Storage">Messenger</span> {
+   <span class="Storage">public </span><span class="Storage">void</span> <span class="FunctionName">send</span>(<span class="LibraryClassType">String</span> message) {
+      <span class="LibraryClassType">System</span>.out.println(<span class="String"><span class="String">"</span>TEXT: <span class="String">"</span></span> <span class="Keyword">+</span> message);
+   }
+}
+<span class="Storage">class</span> <span class="TypeName">XMLMessenger</span> <span class="Storage">implements</span> <span class="Storage">Messenger</span> {
+   <span class="Storage">public </span><span class="Storage">void</span> <span class="FunctionName">send</span>(<span class="LibraryClassType">String</span> message) {
+      <span class="LibraryClassType">System</span>.out.println(<span class="String"><span class="String">"</span>&lt;message&gt;<span class="String">"</span></span> <span class="Keyword">+</span> message <span class="Keyword">+</span> <span class="String"><span class="String">"</span>&lt;/message&gt;<span class="String">"</span></span>);
+   }
+}
+<span class="Storage">class</span> <span class="TypeName">Demo</span> {
+   <span class="Storage">public </span><span class="Storage">void</span> <span class="FunctionName">useMessenger</span>(<span class="Storage">Messenger</span> messenger) {
+      messenger.send(<span class="String"><span class="String">"</span>Which messenger am I using?<span class="String">"</span></span>);
+   }
+} 
+</pre>
+  <p>As you may quickly notice, this requires dynamic dispatching (run-time decision) since compiler
+    cannot decide the actual type of the messenger which <em>Demo.useMessenger</em> uses. Lots of known design patterns are already based on this mechanism (Strategy, Bridge, etc..).
+    Again I'm not going go into details, you can find more information about this on <a href="http://en.wikipedia.org/wiki/Single_dispatch">Single/Dynamic Dispatch</a> and <a href="http://c2.com/cgi/wiki?SingleDispatch">Single Dispatch</a> / <a href="http://c2.com/cgi/wiki?DynamicDispatch">Dynamic Dispatch</a>. </p>
+  <h2>Multiple Dispatching</h2>
+  <p>Roughly it is the idea behind overloading in most programming languages. Your type has so many
+    functions with the same name, but they all have different parameters. </p>
+  <pre class="idle"><span class="Storage">class</span> <span class="TypeName">Messenger</span> {
+   <span class="Storage">public </span><span class="Storage">void</span> <span class="FunctionName">send</span>(<span class="LibraryClassType">String</span> message) { }
+   <span class="Storage">public </span><span class="Storage">void</span> <span class="FunctionName">send</span>(<span class="LibraryClassType">String</span> message, <span class="Storage">Person</span> to) { }
+   <span class="Storage">public </span><span class="Storage">void</span> <span class="FunctionName">send</span>(<span class="LibraryClassType">String</span> message, <span class="LibraryClassType">String</span> subject, <span class="Storage">Person</span> to) { }
+} 
+</pre>
+  <p>You can figure out how it would work. However multiple dispatching is not just about this.
+    I guess overloading example is misleading too. Anyways, let's consider following example: </p>
+  <pre class="idle"><span class="Storage">interface</span> <span class="TypeName">Messenger</span> {
+   <span class="Storage">void</span> send(<span class="LibraryClassType">String</span> message);
+}
+<span class="Storage">class</span> <span class="TypeName">TextMessenger</span> <span class="Storage">implements</span> <span class="Storage">Messenger</span> {
+   <span class="Storage">public </span><span class="Storage">void</span> <span class="FunctionName">send</span>(<span class="LibraryClassType">String</span> message) {
+      <span class="LibraryClassType">System</span>.out.println(<span class="String"><span class="String">"</span>TEXT: <span class="String">"</span></span> <span class="Keyword">+</span> message);
+   }
+}
+<span class="Storage">class</span> <span class="TypeName">XMLMessenger</span> <span class="Storage">implements</span> <span class="Storage">Messenger</span> {
+   <span class="Storage">public </span><span class="Storage">void</span> <span class="FunctionName">send</span>(<span class="LibraryClassType">String</span> message) {
+      <span class="LibraryClassType">System</span>.out.println(<span class="String"><span class="String">"</span>&lt;message&gt;<span class="String">"</span></span> <span class="Keyword">+</span> message <span class="Keyword">+</span> <span class="String"><span class="String">"</span>&lt;/message&gt;<span class="String">"</span></span>);
+   }
+}
+<span class="Storage">class</span> <span class="TypeName">Demo</span> {
+   <span class="Storage">public </span><span class="Storage">void</span> <span class="FunctionName">useMessenger</span>(<span class="Storage">Messenger</span> messenger) {
+      messenger.send(<span class="String"><span class="String">"</span>Which messenger am I using?<span class="String">"</span></span>);
+   }
+   <span class="Storage">public </span><span class="Storage">void</span> <span class="FunctionName">useMessenger</span>(<span class="Storage">TextMessenger</span> messenger) {
+      messenger.send(<span class="String"><span class="String">"</span>I'm TextMessenger for sure, but?<span class="String">"</span></span>);
+   }
+} 
+</pre>
+  <p>So what do you think will happen when I try to invoke <em>Demo.useMessenger</em> with a <em>TextMessenger</em>. If your language doesn't support true multiple dispatch mechanism, you'll always end up invoking <em>useMessenger(Messenger)</em> function no matter what you provide. With true multiple dispatching, you'll invoke <em>useMessenger(TextMessenger)</em> when you provide <em>TextMessenger</em> to the function. More information <a href="http://en.wikipedia.org/wiki/Multiple_dispatch">Multiple Dispatch</a> or <a href="http://c2.com/cgi/wiki?MultipleDispatch">Multiple Dispatch</a>. BTW, <strong>Java</strong> doesn't support true multiple dispatching, so don't cause any bugs while creating overloaded methods. </p>
+  <h2>Double Dispatching</h2>
+  <p>Well this one is pretty cool. Some define this as true dispatching :) Anyways, to me all of them
+    are true :) In real world, all relations are actually two-way. It's not only you're telling
+    somebody about something, he/she is also listening to you. Double dispatching is like this:
+    two-way. Visitor pattern is actually good way of explaining this topic. Let's look at the
+    following example: </p>
+  <pre class="idle"><span class="Comment"><span class="Comment">//</span> messenger</span>
+<span class="Storage">interface</span> <span class="TypeName">Messenger</span> {
+   <span class="Storage">void</span> send(<span class="Storage">Message</span> message);
+}
+<span class="Storage">class</span> <span class="TypeName">TextMessenger</span> <span class="Storage">implements</span> <span class="Storage">Messenger</span> {
+   <span class="Storage">public </span><span class="Storage">void</span> <span class="FunctionName">send</span>(<span class="Storage">Message</span> message) {
+      <span class="Comment"><span class="Comment">//</span> some custom operations</span>
+      message.print(<span class="Variable">this</span>);
+   }
+}
+<span class="Storage">class</span> <span class="TypeName">XMLMessenger</span> <span class="Storage">implements</span> <span class="Storage">Messenger</span> {
+   <span class="Storage">public </span><span class="Storage">void</span> <span class="FunctionName">send</span>(<span class="Storage">Message</span> message) {
+      <span class="Comment"><span class="Comment">//</span> some other custom operations</span>
+      message.print(<span class="Variable">this</span>);
+   }
+}
+<span class="Comment"><span class="Comment">//</span> and message</span>
+<span class="Storage">class</span> <span class="TypeName">Message</span> {
+    <span class="Storage">public </span><span class="Storage">void</span> <span class="FunctionName">print</span>(<span class="Storage">TextMessenger</span> messenger) {
+      <span class="Comment"><span class="Comment">//</span> do something</span>
+    }
+    <span class="Storage">public </span><span class="Storage">void</span> <span class="FunctionName">print</span>(<span class="Storage">XMLMessenger</span> messenger) {
+      <span class="Comment"><span class="Comment">//</span> do some other thing</span>
+    }
+} 
+</pre>
+  <p>As you can easily see, objects are related to each-other both ways. <em>Message</em> is deciding to do something based on other types. </p>
+  <p>Hope this clarifies things a bit more.</p>
+</article></section><div id="disqus_thread">
+        </div>
+        <script type="text/javascript">var disqus_developer = 1;
+          var disqus_shortname = 'localblog';
+          var host = 'localhost:4567';
+          (function() {
+             var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+             dsq.src = 'http://' + disqus_shortname + '.disqus.com/embed.js';
+             (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+          })();</script><noscript>Please enable JavaScript to view the <a href="http://disqus.com/?ref_noscript">comments powered by Disqus</a>. </noscript>
+      </div>
+    </div>
+<footer><p>Copyrighted © 2011</p>
+    </footer>
+</body>
+</html>
