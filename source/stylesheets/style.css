@@ -27,7 +27,7 @@ div#main { min-height: 100%; }
             section ul li p { text-align: right; font-size: 1.1em; font-style: oblique; color: #999; }
             section ul li p a { float:none; display: inline; margin: 0; color: #a92c32; }
             section ul li p a:hover { color: #692b00; }
-            section ul li span.circle { float:left; display: block; width: 1.1em; height: 1.3em; background: #333; border-radius: 1.5em; -moz-border-radius: 1.5em; -webkit-border-radius: 1.5em; font-size: 1.2em; color: #fff; padding: 0.2em 0.25em 0.15em 0.3em; }
+            section ul li span.circle { float:left; display: block; width: 1.1em; height: 1.3em; background: #333; border-radius: 1.5em; -moz-border-radius: 1.5em; -webkit-border-radius: 1.5em; font-family: Georgia, serif; font-size: 1.2em; color: #fff; padding: 0.15em 0.25em; }
             section ul li:hover span.circle { background-color: #d45227; }
          section#archive article { display: block; float: left; margin-top: 2.3em; width: 49%; text-align: center; }
             section#archive article header { font-size: 1.2em; color: #595959; }
@@ -55,9 +55,9 @@ div#main { min-height: 100%; }
                section article#detail p a:hover { color: #196674; }
                section article#detail p strong { font-weight: bold; color: #474747; }
                section article#detail p em { font-style: oblique; color: #939393 }
-               section article#detail p span.highlight { background-color: #ebeaff; padding: 0.3em 0.4em 0.2em 0.4em; border-radius: 0.5em; -moz-border-radius: 0.5em; -webkit-border-radius: 0.5em; }
+               section article#detail p span.highlight { background-color: #ebeaff; padding: 0.2em 0.3em 0.08em; border-radius: 0.5em; -moz-border-radius: 0.5em; -webkit-border-radius: 0.5em; }
                section article#detail p span.underline { text-decoration: underline; }
-               section article#detail p abbr { background-color: #ebeaff; padding: 0.3em 0.4em 0.2em 0.4em; border-radius: 0.5em; -moz-border-radius: 0.5em; -webkit-border-radius: 0.5em; }
+               section article#detail p abbr { background-color: #ebeaff; padding: 0.2em 0.3em 0.08em; border-radius: 0.5em; -moz-border-radius: 0.5em; -webkit-border-radius: 0.5em; }
             section article#detail pre { position: relative; margin: 1.6em 0 0 0.4em; padding: 0.7em; font-family: Monaco, Consolas, monospace; font-size: 0.8em; line-height: 1.6em; background: url('/images/pre-bg.png') repeat 0 1px; border:0; border-top: 1px solid #eee; border-bottom: 1px solid #eee; width: 95%; overflow: auto; white-space: pre-wrap; white-space: -moz-pre-wrap !important; white-space: -pre-wrap; white-space: -o-pre-wrap; word-wrap: break-word; }
             section article#detail blockquote { font-size: 1.1em; font-style: oblique; line-height: 1.6em; color: #999; padding: 1.2em; margin: 1.6em auto 0 auto; width: 80%; border-top: 1px solid #ddd; border-bottom: 1px solid #ddd; }
                section article#detail blockquote p.author { text-align: right; font-size: 1.0em; font-style: normal; color: #474747; padding-top: 1.6em; }
