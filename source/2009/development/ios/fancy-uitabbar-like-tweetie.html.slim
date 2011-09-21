@@ -1,9 +1,124 @@
-article id="detail"
+article#detail
    header Fancy UITabBar Like Tweetie
-   p class="date" &rsaquo; December 9, 2009
+   p.date &rsaquo; December 9, 2009
 
-   p class="brief"
-      ' In this article, I'll try to demonstrate how Tweetie for iPhone made it's toolbar.
-        It's actually quite simple. Just try to follow my instructions.
+   p.brief
+      ' It's been a while I haven't written anything about iPhone :) Anyways, today I added a fancy
+      em UITabBar
+      '  (like in
+      strong Tweetie 2
+      ' ) to one of my applications. I thought I would share the code since I saw lots of iPhone Dev
+        folks are looking for this :)
 
+   p
+      ' Initially I started googling, then I ended up a
+      == link_to "StackOverflow entry", "http://stackoverflow.com/questions/1563701/making-a-thinner-uitabbar"
+      '  says you have to Roll it :) Since my need was just placing an indicator on top of the
+      em UITabItem
+      ' , I didn't go for that way.
+
+   p Here is how I did:
+
+   p
+      ' First, I created an
+      em UIImageView
+      '  which has the indicator icon. Then I added this view to my
+      em UITabBar
+      '  as subview.
+
+   pre
+      ' ::objective-c::
+        UIImage *upArrow = [UIImage imageNamed:@"up-arrow.png"];
+        UIImageView *imageView=[[UIImageView alloc] initWithImage:upArrow];
+        imageView.tag = ICON_TAG;
+        [upArrow release];
+        [self.tabBarController.tabBar addSubview:imageView];
+
+   p
+      ' This wasn't quite enough for my need since I needed indicator to be centered. So I did some math:)
+
+   pre
+      ' ::objective-c::
+        int itemCount = [self.tabBarController.tabBar.items count];
+        CGFloat cellWidth = tabBarController.view.frame.size.width/itemCount;
+        CGFloat center = (cellWidth / 2) - (INDICATOR_WIDTH / 2);
+
+   p
+      ' Now I could easily use this center as my indicator center. However I noticed that this wasn't
+        enough either since I want it to move every time after I tap to the next
+      em UITabBarItem
+      ' . So I did some refactoring and:
+
+   pre
+      ' ::objective-c::
+        &#35;define INDICATOR_WIDTH 10 //u can define st like this
+        -(void) addIndicatorTo:(int) index {
+           int itemCount = [self.tabBarController.tabBar.items count];
+           CGFloat cellWidth=tabBarController.view.frame.size.width/itemCount;
+           CGFloat center = (index * cellWidth) + (cellWidth / 2)
+                             - (INDICATOR_WIDTH / 2);
+           UIImage *upArrow = [UIImage imageNamed:@"up-arrow.png"];
+           UIImageView *imageView = [[UIImageView alloc] initWithImage:upArrow];
+           imageView.tag = ICON_TAG;
+           [upArrow release];
+           [self.tabBarController.tabBar addSubview:imageView];
+        }
+        // just listen the item index change
+        - (void)tabBarController:(UITabBarController *)tbController
+              didSelectViewController:(UIViewController *)viewController {
+           [self addIndicatorTo:tbController.selectedIndex];
+        }
+
+   p
+      ' So far so good. Wait a second, this adds new images every time I tap to the next
+      em UITabBarItem
+      ' :S Anyways, so I refactored my code a little more:
+
+   pre
+      ' ::objective-c::
+        &#35;define INDICATOR_WIDTH 10 //u can define st like this
+        &#35;define INDICATOR_WIDTH 9 //u can define st like this
+        &#35;define ICON_TAG 11 //u can define st like this
+        -(UIImageView *) createNewIndicator {
+           UIImage *upArrow = [UIImage imageNamed:@"up-arrow.png"];
+           UIImageView *imageView = [[UIImageView alloc] initWithImage:upArrow];
+           imageView.tag = ICON_TAG;
+           [upArrow release];
+           return imageView;
+        }
+        -(UIImageView *) findIndicator {
+           // return existing one
+           for (UIView *view in self.tabBarController.tabBar.subviews) {
+              if (view.tag == ICON_TAG) {
+                 return (UIImageView *) view;
+              }
+           }
+           // if not return a new one
+           return [self createNewIndicator];
+        }
+        -(void) addIndicatorTo:(int) index {
+           int itemCount = [self.tabBarController.tabBar.items count];
+           CGFloat cellWidth = tabBarController.view.frame.size.width / itemCount;
+           CGFloat center = (index * cellWidth)
+                    + (cellWidth / 2) - (INDICATOR_WIDTH / 2);
+           UIImageView *imageView = [self findIndicator];
+           imageView.frame = CGRectMake(
+                          indicatorPositionX,
+                          3 - INDICATOR_HEIGHT,
+                          INDICATOR_WIDTH,
+                          INDICATOR_HEIGHT
+                         );
+           [self.tabBarController.tabBar addSubview:imageView];
+        }
+
+   p
+      ' This is basically it. So I did some animation too, here is the result:
+
+   p.video
+      video src="" controls="controls"
+         source src="http://isagoksu.com/wp-content/uploads/screencasts/iphone/FancyTabbar.m4v" type="video/mp4" />
+         em Your browser does not support the HTML5 videos.
+
+   p
+      ' If you guys need, I can upload the working source code to somewhere.. Hope this guides a bit.
 

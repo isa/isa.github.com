@@ -1,6 +1,7 @@
 require 'find'
 require 'date'
 require 'uv'
+# require 'rygments'
 require 'rack/codehighlighter'
 
 class Article
@@ -18,9 +19,11 @@ helpers do
       articles = []
       Dir.glob("./source/20*/**/*.slim").each do |file|
          content = File.open(file, "r").read
+
          title = /header (.*)/i.match(content)[1]
-         date = /p class="date" &rsaquo; (.*)/i.match(content)[1]
+         date = /date.*&rsaquo; (.*)/i.match(content)[1]
          link = /.\/source(.*).html.slim/i.match(file)[1] + '/'
+
          articles.push(Article.new(title, link, date))
       end
       articles.sort_by { |a| [-DateTime.parse(a.date).to_time.to_i, a.title] }
@@ -39,10 +42,11 @@ use Rack::Codehighlighter,
    :pattern => /\A::([-_+\w]+)::\s*/,
    :logging => false
 
-# use Rack::Codehighlighter, :ultraviolet, :markdown => true,
-#   :theme => "minimal_theme", :lines => false, :element => "pre>code",
-#   :pattern => /\A:::([-_+\w]+)\s*(\n|&#x000A;)/, :logging => false,
-#   :themes => {"vibrant_ink" => ["ruby"], "upstream_sunburst" => ["objective-c", "java"]}
+# use Rack::Codehighlighter,
+#    :pygments,
+#    :element => "pre",
+#    :pattern => /\A::([-_+\w]+)::\s*/,
+#    :logging => false
 
 configure :build do
   activate :minify_css

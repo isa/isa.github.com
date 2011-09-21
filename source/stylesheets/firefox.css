@@ -1,2 +1,5 @@
-@-moz-document url-prefix() { section article#detail pre { line-height: 1.56em; }}
+@-moz-document url-prefix() {
+   section article#detail pre { line-height: 1.56em; }
+   section article#detail p.video { padding-bottom: 0.1em; }
+}
 

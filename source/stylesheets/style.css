@@ -19,7 +19,7 @@ div#main { min-height: 100%; }
       div#page-header { float:right; width: 66%; margin-top: -0.7em; }
          div#page-header hr { width: 480px; height: 1px; border: 0; color: #e3e3e3; background-color: #e3e3e3; }
          div#page-header p.signature { float: right; color: #a92c32; font-family: lourdes-1,lourdes-2; font-size: 1.2em; font-style: oblique; margin-top: -0.5em; margin-right: 2.5em; background-color: white; padding: 0 0.5em; }
-      section { overflow:auto; padding-bottom: 3em; clear: both; }
+      section { overflow:auto; clear: both; }
          section ul { list-style: none; margin-top: 2.2em; width: 80%; }
             section ul li { clear: both; display: block; margin-top: 1.9em; padding: 0.3em; line-height: 1.5em; border-top: 1px solid #efefef; }
             section ul li a { float: left; display: block; margin: 0.3em 0.5em; color: #999; font-size: 1.1em; }
@@ -49,7 +49,8 @@ div#main { min-height: 100%; }
                section article#detail p.image { text-align: center; line-height: 1em; }
                   section article#detail p.image img { padding: 0.5em; box-shadow: 0 0 5px 5px #e9e9e9; }
                   section article#detail p.image small { display: block; padding-top: 0.5em; font-size: 0.8em; text-align: center; }
-               section article#detail p.video { float: left; margin: 1.3em 0 0 1.1em; padding: 0.5em 0.5em 0 0.5em; box-shadow: 0 0 5px 5px #e9e9e9; }
+               section article#detail p.video { margin: 1.3em auto; margin-bottom: 0; padding: 0.5em; display: table; box-shadow: 0 0 5px 5px #e9e9e9; }
+                  section article#detail p.video video { display: table-cell; }
                section article#detail p a { font-weight: bold; color: #0477bf; }
                section article#detail p a:hover { color: #196674; }
                section article#detail p strong { font-weight: bold; color: #474747; }

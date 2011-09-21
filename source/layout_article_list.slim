@@ -11,6 +11,6 @@ html
                - for article in create_articles_list do
                   article
                      header
-                        a href="#{article.link}" #{article.title}
+                        == link_to "#{article.title}", "#{article.link}"
                      p #{article.date}
       == partial "footer"
