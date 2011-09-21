@@ -39,7 +39,7 @@ div#main { min-height: 100%; }
             section article#featured p.brief { font-size: 1.5em; line-height: 1.4em; color: #999; padding-top: 0.7em; }
                section article#featured p.brief a { color: #3a6579; }
                section article#featured p.brief a:hover { color: #33394c; }
-         section article#detail { margin-top: 2.3em; width: 90%; }
+         section article#detail { margin-top: 2.3em; width: 96%; }
             section article#detail header { color: #a92c32; font-size: 2.3em; }
             section article#detail h2 { margin-top: 1.6em; }
             section article#detail h3 { margin-top: 1.6em; }
@@ -67,6 +67,6 @@ div#main { min-height: 100%; }
             section article#detail ol { list-style: none; counter-reset: item; margin: 1.6em 0 0 1.6em; border-bottom: 1px solid #eee; width: 90%; }
                section article#detail ol li:before { content: counter(item) ". "; counter-increment: item; color: #6e7e83; margin-right: 0.5em; }
                section article#detail ol li { text-indent: 0.5em; font-size: 1.2em; line-height: 1.4em; color: #464646; padding-top: 0.2em; border-top: 1px solid #eee; }
-         section div#disqus_thread { padding-top: 1.6em; width: 90%; }
+         section div#disqus_thread { padding-top: 1.6em; width: 96%; }
 footer { position: relative; margin-top: -3em; height: 3em; clear:both; background-color: #e3e3e3; border-top: 1px solid #ccc; }
    footer p { line-height: 2em; padding-top: 1em; font-size: 0.8em; text-align: center; color: #999; }
