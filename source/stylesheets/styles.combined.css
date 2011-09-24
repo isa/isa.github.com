@@ -1,5 +1,5 @@
-#include stylesheets/style.css
-#include stylesheets/firefox.css
-#include stylesheets/opera.css
-#include stylesheets/idle.css
-#include stylesheets/disqus.css
+<!--#include file="style.css"-->
+<!--#include file="firefox.css"-->
+<!--#include file="opera.css"-->
+<!--#include file="idle.css"-->
+<!--#include file="disqus.css"-->
