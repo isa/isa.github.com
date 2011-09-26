@@ -32,7 +32,6 @@ helpers do
       return <<-VIDEO
          <script src="/javascripts/jquery.min.js" type="text/javascript"></script>
          <script src="/javascripts/projekktor.min.js" type="text/javascript"></script>
-         <link rel="stylesheet" href="/stylesheets/player.css" type="text/css" media="screen" />
          <video class="projekktor" poster="#{image}" title="#{title}" width="#{width}" height="#{height}" controls>
             <source src="#{url}" type="video/mp4" />
          </video>

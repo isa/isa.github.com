@@ -12,6 +12,7 @@ html
 
             div#disqus_thread
             script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jquery/1.6.3/jquery.min.js"
+            script type='text/javascript' src='http://www.livefyre.com/wjs/v1.0/javascripts/livefyre_init.js'
             javascript:
                !window.jQuery && document.write('<script src="/javascripts/jquery.min.js"><\/script>')
                $(document).ready(function() {
@@ -26,17 +27,9 @@ html
                      });
                   });
                });
-               var disqus_developer = 1;
-               var disqus_shortname = 'localblog';
-               (function() {
-                  var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
-                  dsq.src = 'http://' + disqus_shortname + '.disqus.com/embed.js';
-                  (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
-               })();
-
-            noscript
-               ' Please enable JavaScript to view the
-               == link_to "comments powered by Disqus", "http://disqus.com/?ref_noscript"
-               ' .
+               var fyre = LF({
+                   site_id: 289922,
+                   version: '1.0'
+               });
 
       == partial "footer"
