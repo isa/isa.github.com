@@ -1,5 +1,5 @@
 @-moz-document url-prefix() {
+   div#page-header p.signature { top: -0.1em; }
    section article#detail pre { line-height: 1.56em; }
-   section article#detail p.video { padding-bottom: 0.1em; }
 }
 

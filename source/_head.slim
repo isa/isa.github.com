@@ -4,17 +4,16 @@ head
    meta name="author" content="Isa Goksu"
 
 
-   / Le HTML5 shim, for IE6-8 support of HTML elements
-   /[ if lt IE 9 ]
-     script src='http://html5shim.googlecode.com/svn/trunk/html5.js'
-
    link rel="icon" type="image/png" href="/images/favicon.png"
    link rel="shortcut icon" type="image/png" href="/images/favicon.png"
    link rel="apple-touch-icon" type="image/png" href="/images/favicon.png"
 
-   == stylesheet_link_tag "style.css", :media => "all"
-   == stylesheet_link_tag "idle.css", :media => "all"
    == stylesheet_link_tag "styles.combined.css", :media => "all"
+
+   / Le HTML5 shim, for IE6-8 support of HTML elements
+   /[ if lt IE 9 ]
+     script src='http://html5shim.googlecode.com/svn/trunk/html5.js'
+     == stylesheet_link_tag "ie.css", :media => "all"
 
    script type="text/javascript" src="http://use.typekit.com/vew8tjo.js"
    javascript:
