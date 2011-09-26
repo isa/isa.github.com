@@ -1,5 +1,6 @@
 * { margin: 0; padding: 0; border: 0; }
-html, body { height: 100%; font-family: minion-pro-1, minion-pro-2, serif; font-size: 100%; }
+html { height: 100%; -webkit-font-smoothing: antialiased; }
+body { height: 100%; font-family: minion-pro-1, minion-pro-2, serif; font-size: 100%; }
 ::selection { color:#fff; background-color: #e95155; }
 
 header, footer, article { display:block; }
@@ -25,7 +26,7 @@ div#main { min-height: 100%; }
             section ul li a { float: left; display: block; margin: 0.2em 0.5em; color: #999; font-size: 1.1em; }
             section ul li a:hover { color: #3a6579; }
             section ul li p { text-align: right; font-size: 1.1em; font-style: oblique; color: #999; }
-            section ul li p a { float:none; display: inline; margin: 0; color: #a92c32; }
+            section ul li p a { float:none; display: inline; font-size: 1.0em; margin: 0; color: #a92c32; }
             section ul li p a:hover { color: #692b00; }
             section ul li span.circle { float:left; display: block; width: 1.2em; height: 1.4em; background: #333; border-radius: 1.5em; -moz-border-radius: 1.5em; -webkit-border-radius: 1.5em; font-family: Georgia, serif; font-size: 1.2em; color: #fff; padding: 0.15em 0.25em; }
             section ul li:hover span.circle { background-color: #d45227; }
@@ -39,7 +40,7 @@ div#main { min-height: 100%; }
             section article#featured p.brief { font-size: 1.5em; line-height: 1.4em; color: #999; padding-top: 0.7em; }
                section article#featured p.brief a { color: #3a6579; }
                section article#featured p.brief a:hover { color: #33394c; }
-         section article#detail { margin-top: 2.3em; width: 90%; }
+         section article#detail { margin-top: 2.3em; width: 96%; }
             section article#detail header { color: #a92c32; font-size: 2.3em; }
             section article#detail h2 { margin-top: 1.6em; }
             section article#detail h3 { margin-top: 1.6em; }
@@ -67,6 +68,6 @@ div#main { min-height: 100%; }
             section article#detail ol { list-style: none; counter-reset: item; margin: 1.6em 0 0 1.6em; border-bottom: 1px solid #eee; width: 90%; }
                section article#detail ol li:before { content: counter(item) ". "; counter-increment: item; color: #6e7e83; margin-right: 0.5em; }
                section article#detail ol li { text-indent: 0.5em; font-size: 1.2em; line-height: 1.4em; color: #464646; padding-top: 0.2em; border-top: 1px solid #eee; }
-         section div#disqus_thread { padding-top: 1.6em; width: 90%; }
+         section article#detail div#disqus_thread { padding-top: 1.6em; width: 96%; }
 footer { position: relative; margin-top: -3em; height: 3em; clear:both; background-color: #e3e3e3; border-top: 1px solid #ccc; }
    footer p { line-height: 2em; padding-top: 1em; font-size: 0.8em; text-align: center; color: #999; }

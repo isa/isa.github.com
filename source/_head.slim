@@ -1,6 +1,5 @@
 head
    meta charset="utf-8"
-   meta content="IE=edge;chrome=1;FF=3;OtherUA=4" http-equiv="X-UA-Compatible"
    meta name="description" content="Isa Goksu's Blog"
    meta name="author" content="Isa Goksu"
 
@@ -13,6 +12,8 @@ head
    link rel="shortcut icon" type="image/png" href="/images/favicon.png"
    link rel="apple-touch-icon" type="image/png" href="/images/favicon.png"
 
+   == stylesheet_link_tag "style.css", :media => "all"
+   == stylesheet_link_tag "idle.css", :media => "all"
    == stylesheet_link_tag "styles.combined.css", :media => "all"
 
    script type="text/javascript" src="http://use.typekit.com/vew8tjo.js"

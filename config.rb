@@ -1,7 +1,6 @@
 require 'find'
 require 'date'
 require 'uv'
-# require 'rygments'
 require 'rack/codehighlighter'
 
 class Article
@@ -15,7 +14,7 @@ class Article
 end
 
 helpers do
-   def create_articles_list
+   def create_articles_list()
       articles = []
       Dir.glob("./source/20*/**/*.slim").each do |file|
          content = File.open(file, "r").read
@@ -27,6 +26,22 @@ helpers do
          articles.push(Article.new(title, link, date))
       end
       articles.sort_by { |a| [-DateTime.parse(a.date).to_time.to_i, a.title] }
+   end
+
+   def video_to(url, image = '', title = '', width = 560, height = 320)
+      return <<-VIDEO
+         <script src="/javascripts/jquery.min.js" type="text/javascript"></script>
+         <script src="/javascripts/projekktor.min.js" type="text/javascript"></script>
+         <link rel="stylesheet" href="/stylesheets/player.css" type="text/css" media="screen" />
+         <video class="projekktor" poster="#{image}" title="#{title}" width="#{width}" height="#{height}" controls>
+            <source src="#{url}" type="video/mp4" />
+         </video>
+         <script type="text/javascript">
+            $(document).ready(function() {
+               projekktor('video');
+            });
+         </script>
+      VIDEO
    end
 end
 
@@ -41,12 +56,6 @@ use Rack::Codehighlighter,
    :element => "pre",
    :pattern => /\A::([-_+\w]+)::\s*/,
    :logging => false
-
-# use Rack::Codehighlighter,
-#    :pygments,
-#    :element => "pre",
-#    :pattern => /\A::([-_+\w]+)::\s*/,
-#    :logging => false
 
 configure :build do
   activate :minify_css
