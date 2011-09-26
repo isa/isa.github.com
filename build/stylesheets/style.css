@@ -1,4 +1,42 @@
-* { margin: 0; padding: 0; border: 0; }
+html, body, body div, span, object, iframe, h1, h2, h3, h4, h5, h6, p, blockquote, pre, abbr, address, cite, code, del, dfn, em, img, ins, kbd, q, samp, small, strong, sub, sup, var, b, i, dl, dt, dd, ol, ul, li, fieldset, form, label, legend, table, caption, tbody, tfoot, thead, tr, th, td, article, aside, figure, footer, header, hgroup, menu, nav, section, time, mark, audio, video {
+   margin: 0;
+   padding: 0;
+   border: 0;
+   outline: 0;
+   font-size: 100%;
+   vertical-align: baseline;
+   background: transparent;
+}
+
+article, aside, figure, footer, header, hgroup, nav, section {display: block;}
+
+/* Responsive images and other embedded objects
+   Note: keeping IMG here will cause problems if you're using foreground images as sprites.
+   If this default setting for images is causing issues, you might want to replace it with a .responsive class instead. */
+img,
+object,
+embed {max-width: 100%;}
+
+table {font-size: inherit; font: 100%;}
+td, td img {vertical-align: top;}
+
+/* Accessible focus treatment
+   people.opera.com/patrickl/experiments/keyboard/test */
+a:hover, a:active {outline: none;}
+
+/* scale images in IE7 more attractively */
+.ie7 img {-ms-interpolation-mode: bicubic;}
+
+/* prevent BG image flicker upon hover */
+.ie6 html {filter: expression(document.execCommand("BackgroundImageCache", false, true));}
+
+/* Custom text-selection colors (remove any text shadows: twitter.com/miketaylr/status/12228805301) */
+::-moz-selection { background: #e95155; color: #fff; text-shadow: none; }
+::selection { background: #e95155; color: #fff; text-shadow: none; }
+
+/* j.mp/webkit-tap-highlight-color */
+a:link {-webkit-tap-highlight-color: #fcd700;}
+
 html { height: 100%; -webkit-font-smoothing: antialiased; }
 body { height: 100%; font-family: minion-pro-1, minion-pro-2, serif; font-size: 100%; }
 ::selection { color:#fff; background-color: #e95155; }
@@ -17,9 +55,9 @@ div#main { min-height: 100%; }
          nav ul li { float: left; padding: 0 0.3em; color: #a9a9a9; font-size: 1.2em; letter-spacing: 0.1em; }
          nav ul li.even { color: #d9d9d9; }
          nav ul li:first-child { padding:0; padding-left: 0.18em; padding-right: 0.3em; }
-      div#page-header { float:right; width: 66%; margin-top: -0.7em; }
+      div#page-header { float:right; width: 66%; margin-top: -1.6em; }
          div#page-header hr { width: 480px; height: 1px; border: 0; color: #e3e3e3; background-color: #e3e3e3; }
-         div#page-header p.signature { float: right; color: #a92c32; font-family: lourdes-1,lourdes-2; font-size: 1.2em; font-style: oblique; margin-top: -0.5em; margin-right: 2.5em; background-color: white; padding: 0 0.5em; }
+         div#page-header p.signature { float: right; position: relative; top: 0.7em; color: #a92c32; font-family: lourdes-1,lourdes-2; font-size: 1.2em; font-style: oblique; line-height: 1.2em; margin-right: 2.5em; background-color: white; padding: 0 0.5em; }
       section { overflow:auto; clear: both; }
          section ul { list-style: none; margin-top: 2.2em; width: 80%; }
             section ul li { clear: both; display: block; margin-top: 1.9em; padding: 0.3em; line-height: 1.5em; border-top: 1px solid #efefef; }
@@ -59,7 +97,7 @@ div#main { min-height: 100%; }
                section article#detail p span.highlight { background-color: #ebeaff; padding: 0.2em 0.3em 0.08em; border-radius: 0.5em; -moz-border-radius: 0.5em; -webkit-border-radius: 0.5em; }
                section article#detail p span.underline { text-decoration: underline; }
                section article#detail p abbr { background-color: #ebeaff; padding: 0.2em 0.3em 0.08em; border-radius: 0.5em; -moz-border-radius: 0.5em; -webkit-border-radius: 0.5em; }
-            section article#detail pre { position: relative; margin: 1.6em 0 0 0.4em; padding: 0.7em; font-family: Monaco, Consolas, monospace; font-size: 0.8em; line-height: 1.6em; background: url('/images/pre-bg.png') repeat 0 1px; border:0; border-top: 1px solid #eee; border-bottom: 1px solid #eee; width: 95%; overflow: auto; white-space: pre-wrap; white-space: -moz-pre-wrap !important; white-space: -pre-wrap; white-space: -o-pre-wrap; word-wrap: break-word; }
+            section article#detail pre { position: relative; margin: 1.6em 0 0 0.4em; padding: 0.7em; font-family: Monaco, Courier New, monospace; font-size: 0.8em; line-height: 1.6em; background: url('/images/pre-bg.png') repeat 0 1px; border:0; border-top: 1px solid #eee; border-bottom: 1px solid #eee; width: 95%; overflow: auto; white-space: pre-wrap; white-space: -moz-pre-wrap !important; white-space: -pre-wrap; white-space: -o-pre-wrap; word-wrap: break-word; }
             section article#detail blockquote { font-size: 1.1em; font-style: oblique; line-height: 1.6em; color: #999; padding: 1.2em; margin: 1.6em auto 0 auto; width: 80%; border-top: 1px solid #ddd; border-bottom: 1px solid #ddd; }
                section article#detail blockquote p.author { text-align: right; font-size: 1.0em; font-style: normal; color: #474747; padding-top: 1.6em; }
             section article#detail ul { list-style: none; margin: 1.6em 0 0 1.6em; border-bottom: 1px solid #eee; width: 90%; }
