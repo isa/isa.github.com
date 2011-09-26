@@ -1,0 +1,6 @@
+div#lf_fyre_head a.lf_comment_user_nick { font-size: 1.1em !important; color: #0290da; }
+div#lf_fyre_head a.lf_comment_user_nick:hover { color: #053f72; }
+div#lf_fyre_head .lf_comment_user_rating { float: right; font-size: 1.1em !important; font-style: oblique !important; color: #bbb !important; }
+div#lf_fyre_head .lf_body p { color: #666; font-size: 1.2em; letter-spacing: 0.01em; line-height: 1.4em !important; }
+div#lf_fyre_head span.namespace { background-color: #f7f7f7 !important; background-position: 4px 4px !important; padding: 2px 4px 2px 18px !important; margin:0 2px; }
+
