@@ -1,3 +1,4 @@
+div#lf_fyre_head { width: 96%; }
 div#lf_fyre_head a.lf_comment_user_nick { font-size: 1.1em !important; color: #0290da; }
 div#lf_fyre_head a.lf_comment_user_nick:hover { color: #053f72; }
 div#lf_fyre_head .lf_comment_user_rating { float: right; font-size: 1.1em !important; font-style: oblique !important; color: #bbb !important; }

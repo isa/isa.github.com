@@ -1,0 +1,345 @@
+article#detail
+   header Act Like a Senior Developer - About Clean Code
+   p.date &rsaquo; December 1, 2009
+
+   p.brief
+      ' Today it was a hard day for me. As usual, I was looking at a mess around our code base. And the worst thing was that the code that I saw today was not a
+      em legacy code
+      ' :S
+
+   p
+      ' It has enough
+      u test coverage
+      '  and moreover the system was working well. The problem was the conditional logics used all over
+        the place. It is almost impossible to follow what's happening and where :S Me and my colleague
+        spent 2 whole days trying to understand what the heck was going on. Finally we figured it out
+        and did what we wanted to do initially.
+
+   p
+      ' Here, I wanna just stop and speak loudly to all the developers that call themselves
+      strong senior
+      '  or
+      strong principal
+      '  or
+      strong if (experience != Experiences.JUNIOR):
+
+   p
+      ' People, what's wrong with us? How come newly implemented code base is turning into a mess this
+        fast? How come we're allowing such a mess when we see it slowly approaching us like a monster?
+        But of course, when it comes to the interviews, we have to ask candidates questions around design
+        patterns, real-time problem solving skills, test driven design, and refactoring. And seriously
+        is this why we were asking these questions? I'm so emberassed and ashamed of being a
+      strong senior
+      '  guy today.
+
+   p
+      ' Anyways, long story short, here is a 5 minute crash course about what we forget to foresee:
+
+
+   h2 1. Evil Ifs
+
+   p
+      ' As a
+      strong senior
+      '  guy, you have to be aware of ifs are evil in most cases. For those who forgot, here is a quick
+        do not forget list:
+
+   h3 allow them when:
+
+   p
+      ' Condition can be expressed without
+      em AND, OR
+      '  operators: i.e
+
+   pre
+      ' ::java::
+        if (myContainer.hasItems()) {
+           //...
+        }
+
+   p
+      ' Condition is about an encapsulated field: i.e
+
+   pre
+      ' ::java::
+        if (_isVisible) {
+              //...
+        }
+
+   p
+      ' Condition is non-float numerical comparison: i.e
+
+   pre
+      ' ::java::
+        if (myCertificates.count() > 3) {
+              //...
+        }
+
+   h3 be cautious:
+
+   p
+      ' When there is one or two _AND_, _OR_ operators: i.e
+
+   pre
+      ' ::java::
+        if (_isVisible && !isParent) {
+           //...
+        }
+        // SOLUTION: refactor (extract method, extract local variable, etc)
+
+   p
+      ' When there is negative logic: i.e
+
+   pre
+      ' ::java::
+        if (!_iAmSenior) {
+           //...
+        }
+        // SOLUTION: refactor (make it positive like iAmJunior;
+        // positive statements are easy to understand)
+
+   p
+      ' When there is a very long condition: i.e
+
+   pre
+      ' ::java::
+        if (myAwesomeServiceImpl.findExtremelyImportantSomething()
+                                       .equals(myLocalExtremelyImportantThing)) {
+              //...
+        }
+        // SOLUTION: refactor (make it short or extract local variable,
+        // trust me your application is not at the point where you should
+        // worry about memory or CPU cycles)
+
+   p
+      ' When there is a if/else statement: i.e
+
+   pre
+      ' ::java::
+        if (_isVisible) {
+           number = getNumberFromMoon();
+        } else {
+           number = 1;
+        }
+        // this creates more than 2 execution paths within one method,
+        // make sure you force all the possibilities to block above logic
+        // SOLUTION: get rid of the second part if possible as in:
+        number = 1;
+        if (_isVisible) {
+           number = getNumberFromMoon();
+        }
+        // if it is not this simple, then make sure you created
+        // two different executions paths (with different
+        // methods/classes) before coming to this point
+
+   h3 don't allow please
+
+   p
+      ' When it is a null check:
+
+   pre
+      ' ::java::
+        if (item != null) {
+           // do something...
+        }
+        // SOLUTION: find the cause of null and eliminate it.
+
+   p
+      ' For more information on this topic, please read
+      == link_to "my other post", "http://isagoksu.com/2009/development/java/how-to-avoid-nullpointerexceptions-npe/"
+      '  about null pointer exceptions.
+
+   p
+      '  When there is more than two
+      em AND
+      ' ,
+      em OR
+      ' ,
+      em NOT
+      '  operators: i.e
+
+   pre
+      ' ::java::
+        if ((_isVisible && !isParent) || iAmMaster || youCanPassIsSet) {
+           // do something...
+        }
+        // SOLUTION: For God's sake! you have to refactor this code.
+        // The least you can do is extracting a method out of it
+        // if you don't know any design patterns to apply. Check below:
+        if (isValid()) {
+           // do something...
+        }
+
+   p
+      ' When there is nested if/else statement: i.e
+
+   pre
+      ' ::java::
+        if (isThisTrue) {
+           if (checkIfHeIsTheMaster() && !hmmmThisSeemsWeird()) {
+              // do something...
+           } else {
+              // do something else...
+           }
+        } else {
+           // this is just ugly...
+        }
+        // SOLUTION: Use well known OOP technique called *POLYMORPHISM*,
+        // or if the operator is one of (&gt;, &lt;, ==) then various possible
+        // design patterns like Strategy (behavior modification),
+        // Visitor (context evaluation) or Specification (item selection).
+        // If you're not happy, but you don't know what to do then talk
+        // to someone you think he/she might know.
+
+   p
+      ' Also if you are the maintainer of the code base then you might wanna introduce static
+        code analyzers like
+      abbr PMD
+      ' . They can easily detect
+      strong cyclomatic complexities.
+
+   p
+      ' Anyways, you guys can easily figure it out. You are welcome to introduce new ones. These are
+        just some that I can think of in the middle of the night.
+
+
+   h2 2. Stupid Loops
+
+   p
+      ' Folks, if you're introducing loops to your logic, please make sure that you really need them.
+        Please check the code snippets and the solutions below; I don't wanna comment more about this:
+
+   pre
+      ' ::java::
+        for (int i=0; i &lt; 2; i++) {
+           if (i == 0) {
+              doThis();
+           } else if (i == 1) {
+              doThat();
+           }
+        }
+        // SOLUTION: how about this? You don't need loop there :S
+        doThis();
+        doThat();
+
+   p One more:
+
+   pre
+      ' ::java::
+        item = null;
+        for (int i=0; i &lt; items.size(); i++) {
+           if (isVisible(items.get(i))) {
+              item = items.get(i);
+           }
+        }
+        return item;
+        // SOLUTION: how about this? returning values directly?
+        for (int i=0; i &lt; items.size(); i++) {
+           if (isVisible(items.get(i))) { // EDIT from user comments
+              return items.get(i);
+           }
+        }
+        return null; // if possible even return new NullItem()
+
+   p
+      ' And please.. Very pretty please, stay the F away from the nested loops. I don't wanna even talk about it.
+
+   h2 3. Dependency Injections
+
+   p
+      ' Woov, this one is an advanced topic ah? Everyone loves dependency injection. Spring sort of
+        frameworks are even forcing you to do it this way right? Let me tell you something; I believe
+        after go-to statements, this one is the most misinterpreted topic in programming history. We
+      strong senior
+      '  guys somehow convinced ourselves to something like this:
+
+   blockquote
+      ' If you can inject it's cost free!
+
+   p
+      ' Man... just don't do this please. Everything has a cost.
+        This is just a way to ease/loose your tight connections with your dependencies. Don't try to interpret otherwise.
+
+   p
+      ' And second thing is the famous
+      em setter injection.
+      '  So if you have a setter injection set up there, it means don't worry. It's like we can't think
+        otherwise :S Opppss. Stop here! It is not like that at all if you still couldn't figure it out.
+        Setter injection and Constructor injection are 2 well known ways of doing this (there are other
+        ways too). Each of them has its own advantages/disadvantages. However, let's be honest.
+        Constructor injection is much more declarative than setter injection.
+
+   p
+      ' Anyways, it'a very big debate. I'm kinda scared :P People are gonna be offended again. I just wanna
+        say that if possible please try to use constructor injection in your custom code. If you don't
+        believe me, then refer to Martin Fowler's
+      == link_to "IOC Article", "http://martinfowler.com/articles/injection.html#ConstructorInjectionWithPicocontainer"
+      '  or Misko Hevery's
+      strong Clean Code
+      '  talks at Google, such as
+      == link_to "Don't Look For Things", "http://www.youtube.com/watch?v=RlfLCWKxHJ0"
+      ' .
+
+   h2 4. So Many Dependencies
+
+   p
+      ' Just a tiny comment here. Folks, try reading
+      abbr SOLID
+      '  principles, ok. DON'T CREATE this much dependency :S The class itself is screaming at you:
+
+   blockquote
+      ' I can't carry this much! You won't be able to test this, I've more than 1000 lines, You can't use constructor injection anymore!
+
+   p
+      ' Bottom line, if you have so many dependencies, please try to find a way to separate concerns.
+
+   h2 5. So Many Parameters
+
+   p
+      ' You have more than 3-4 arguments? Re-consider that code. Probably you don't need that. I'm sure
+        you can pull up something from that method or at least extract and call separately.
+
+   h2 6. Pass What You Need
+
+   p
+      ' This bugs me a lot. Look at this:
+
+   pre
+      ' ::java::
+        calculateLoanForSomething(Account, Customer, World);
+        // here is the method
+        void calculateLoanForSomething(Account a, Customer c, World w) {
+           if (w.date.time.hour == 11) {
+              // do something here..
+           }
+        }
+        // Why r u sending God objects everywhere :S
+        void calculateLoanForSomething(Account a, Customer c, int hour) { }
+
+   h2 7. Long Classes/Methods
+
+   p
+      ' Here is my rule of thumb:
+
+   ul
+      li Is it more than 20 lines? Refactor
+      li Is it more than 10 methods? Refactor
+      li Is it more than 5 package? Refactor
+      li
+         ' Your colleague is coding? Please pair with him/her as much as you can especially if you
+           think he/she is gonna introduce something bad. At least you can teach him/her or prevent
+           things from happening.
+
+   p
+      ' I don't know if you guys are agree with me or not. I was so ashamed today and wanted to write
+        this. It was more like a self relaxation. Please don't mind if I used a wrong sentence or
+        anything. It's almost 2AM and I'm so tired.
+
+   p
+      ' For more deeper information about these topics, please refer to Refactoring Book or
+      == link_to "site", "http://refactoring.com"
+      ' ,
+      == link_to "SOLID Principles", "http://butunclebob.com/ArticleS.UncleBob.PrinciplesOfOod"
+      ' , Clean Code talks, Clean Code 
+      == link_to "book", "http://www.amazon.com/Clean-Code-Handbook-Software-Craftsmanship/dp/0132350882"
+      ' .
