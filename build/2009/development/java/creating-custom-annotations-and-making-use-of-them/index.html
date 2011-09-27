@@ -1,0 +1,224 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<meta charset="utf-8">
+<meta content="Isa Goksu's Blog" name="description">
+<meta content="Isa Goksu" name="author">
+<link href="/images/favicon.png" rel="icon" type="image/png">
+<link href="/images/favicon.png" rel="shortcut icon" type="image/png">
+<link href="/images/favicon.png" rel="apple-touch-icon" type="image/png">
+<link type="text/css" rel="stylesheet" media="all" href="/stylesheets/styles.combined.css?1317073593">
+<!--[if lt IE 9]><script src="http://html5shim.googlecode.com/svn/trunk/html5.js">
+    </script><link type="text/css" rel="stylesheet" media="all" href="/stylesheets/ie.css?1317021298" /><![endif]--><script src="http://use.typekit.com/vew8tjo.js" type="text/javascript">
+    </script><script type="text/javascript">try{Typekit.load();}catch(e){}</script><title>Simple and Pragmatic Thoughts by Isa Goksu</title>
+</head>
+<body>
+    <div id="main">
+      <header id="on-top"></header><div id="content">
+<h1>ISAGOKSU</h1>
+        <nav id="menu"><ul>
+<li>
+              <a class="active" href="/">home</a>
+            </li>
+            <li class="even">/</li>
+            <li>
+              <a href="https://github.com/isa">projects</a>
+            </li>
+            <li class="even">/</li>
+            <li>
+              <a href="http://zerp.ly/IsaGoksu">about</a>
+            </li>
+          </ul></nav><div id="page-header">
+          <p class="signature">ig</p>
+          <hr class="signature-line">
+</div>
+<section id="articles"><article id="detail"><header>Creating Custom Annotations and Using Them</header><p class="date">› October 7, 2009</p>
+  <p class="brief">Okay, here is another topic that I couldn't find much information in the Internet :)
+    So I guess I'm gonna cover it quickly. </p>
+  <h2>How to Create a Custom Annotations?</h2>
+  <p>There are a lot of documentation about this part in the Internet. All you have to do is
+    basically creating an annotation class like below: </p>
+  <pre class="idle"><span class="Storage">public</span> @<span class="Storage">interface</span> <span class="Storage">Copyright</span> {
+    <span class="LibraryClassType">String</span> info() <span class="Keyword">default</span> <span class="String"><span class="String">"</span><span class="String">"</span></span>;
+} 
+</pre>
+  <p>And that's it. Now it's ready to use! Now you can put copyright information to your classes :)
+    Since we didn't define any <em>@Target</em> , you can use this annotation anywhere in your classes by default. If you want your annotation
+    to be only available for class-wise or method-wise, you should define <em>@Target</em> annotation. Here is a little table of what options are available: </p>
+  <ul>
+<li>
+      <strong>@Target(ElementType.PACKAGE)</strong>, package header </li>
+    <li>
+      <strong>@Target(ElementType.TYPE)</strong>, class header </li>
+    <li>
+      <strong>@Target(ElementType.CONSTRUCTOR)</strong>, constructor header </li>
+    <li>
+      <strong>@Target(ElementType.METHOD)</strong>, method header </li>
+    <li>
+      <strong>@Target(ElementType.FIELD)</strong>, for class fields only </li>
+    <li>
+      <strong>@Target(ElementType.PARAMATER)</strong>, for method parameters only </li>
+    <li>
+      <strong>@Target(ElementType.LOCAL_VARIABLE)</strong>, for local variables only </li>
+  </ul>
+<p>If you want your annotation to be available in more than one place, just use array syntax as in: </p>
+  <pre class="idle">@<span class="LibraryClassType">Target</span>({ <span class="LibraryClassType">ElementType</span>.<span class="UserDefinedConstant">PARAMETER</span>, <span class="LibraryClassType">ElementType</span>.<span class="UserDefinedConstant">LOCAL_VARIABLE</span> }) 
+</pre>
+  <p>One thing you may already notice is annotations are interfaces, so you don't implement
+    anything in them. </p>
+  <h2>How to Make Use of Your Custom Annotations?</h2>
+  <p>Up to here, you can find lots of examples. Okaaay, now let's do something useful :) For instance,
+    let's re-implement JUnit's <em>@Test</em> annotation. As you guys already know, <em>@Test</em> annotation is a marker annotation. Basically it marks the method as test method. If you're
+    expecting any exceptions, you would set <em>expect</em> attribute in the annotation. You can try anything here, I'm just using this example since
+    everyone knows how <em>@Test</em> annotation works. </p>
+  <p>First let's define our annotation:</p>
+  <pre class="idle">@<span class="LibraryClassType">Target</span>(<span class="LibraryClassType">ElementType</span>.<span class="UserDefinedConstant">METHOD</span>)
+@<span class="LibraryClassType">Retention</span>(<span class="LibraryClassType">RetentionPolicy</span>.<span class="UserDefinedConstant">RUNTIME</span>)
+<span class="Storage">public</span> @<span class="Storage">interface</span> <span class="Storage">Test</span> {
+   <span class="LibraryClassType">Class</span> expected();
+} 
+</pre>
+  <p>You might notice that I used <em>@Retention</em>. This annotation marks our annotation to be retained by JVM at runtime. This will allow us to
+    use Java reflections later on. </p>
+  <p>Now we need to write our annotation parser class. This class will parse our annotation and
+    trigger some other invocations related to what we want. Keep in mind that if you have more
+    than one custom annotation, then it's also wise to have separate parsers for each annotation
+    you define. So I'll create one for this! The basic idea behind the annotation parser is using
+    Java reflections to access the annotation information/attributes etc. So here is an example parser
+    for our <em>@Test</em> annotation: </p>
+  <pre class="idle"><span class="Storage">public </span><span class="Storage">class</span> <span class="TypeName">TestAnnotationParser</span> {
+   <span class="Storage">public </span><span class="Storage">void</span> <span class="FunctionName">parse</span>(<span class="LibraryClassType">Class</span>&lt;?&gt; clazz) <span class="Keyword">throws</span> <span class="LibraryClassType">Exception</span> {
+      <span class="LibraryClassType">Method</span>[] methods = clazz.getMethods();
+      <span class="Storage">int</span> pass = <span class="Number">0</span>;
+      <span class="Storage">int</span> fail = <span class="Number">0</span>;
+      <span class="Keyword">for</span> (<span class="LibraryClassType">Method</span> method : methods) {
+         <span class="Keyword">if</span> (method.isAnnotationPresent(<span class="Storage">Test</span>.<span class="Storage">class</span>)) {
+            <span class="Keyword">try</span> {
+               method.invoke(<span class="BuiltInConstant">null</span>);
+               pass<span class="Keyword">++</span>;
+            } <span class="Keyword">catch</span> (<span class="LibraryClassType">Exception</span> e) {
+               fail<span class="Keyword">++</span>;
+            }
+         }
+      }
+   }
+} 
+</pre>
+  <p>That's all you need. You parser is ready to use too. But wait a minute, we didn't implement
+    anything about the annotation attributes. This part is a bit tricky. Because you cannot directly
+    access those attributes from the object graph. Luckily invocation helps us here. You can only
+    access these attributes by invoking them. Sometimes you might need to cast the class to the
+    annotation type too. I'm sure you'll figure out when you see it:) Anyways here is a bit more
+    logic to take our <strong>expected</strong> attribute into account: </p>
+  <pre class="idle"><span class="Comment"><span class="Comment">//</span> ...</span>
+<span class="Comment"><span class="Comment">//</span> this is how you access to the attributes</span>
+<span class="Storage">Test</span> test = method.getAnnotation(<span class="Storage">Test</span>.<span class="Storage">class</span>);
+<span class="Comment"><span class="Comment">//</span> we use Class type here because our attribute type</span>
+<span class="Comment"><span class="Comment">//</span> is class. If it would be string, you'd use string</span>
+<span class="LibraryClassType">Class</span> expected = test.expected();
+<span class="Keyword">try</span> {
+   method.invoke(<span class="BuiltInConstant">null</span>);
+   pass<span class="Keyword">++</span>;
+} <span class="Keyword">catch</span> (<span class="LibraryClassType">Exception</span> e) {
+   <span class="Keyword">if</span> (<span class="LibraryClassType">Exception</span>.<span class="Storage">class</span> <span class="Keyword">!=</span> expected) {
+       fail<span class="Keyword">++</span>;
+   } <span class="Keyword">else</span> {
+       pass<span class="Keyword">++</span>;
+   }
+}
+<span class="Comment"><span class="Comment">//</span> ... </span>
+</pre>
+  <p>Now everything is ready to use. Below example demonstrates how you use Parser with
+    your test classes: </p>
+  <pre class="idle"><span class="Storage">public </span><span class="Storage">class</span> <span class="TypeName">Demo</span> {
+   <span class="Storage">public static </span><span class="Storage">void</span> <span class="FunctionName">main</span>(<span class="LibraryClassType">String</span> [] args) {
+      <span class="Storage">TestAnnotationParser</span> parser = <span class="Keyword">new</span> <span class="Storage">TestAnnotationParser</span>();
+      parser.parse(<span class="Storage">MyTest</span>.<span class="Storage">class</span>);
+      <span class="Comment"><span class="Comment">//</span> you can use also Class.forName</span>
+      <span class="Comment"><span class="Comment">//</span> to load from file system directly!</span>
+   }
+} 
+</pre>
+  <p>Yeah, I hope you enjoyed. Don't hesitate to put some comments down if you've a better approach?
+    Thanks! Here is the full parser class implementation: </p>
+  <pre class="idle"><span class="Storage">public </span><span class="Storage">class</span> <span class="TypeName">TestAnnotationParser</span> {
+   <span class="Storage">public </span><span class="Storage">void</span> <span class="FunctionName">parse</span>(<span class="LibraryClassType">Class</span>&lt;?&gt; clazz) <span class="Keyword">throws</span> <span class="LibraryClassType">Exception</span> {
+      <span class="LibraryClassType">Method</span>[] methods = clazz.getMethods();
+      <span class="Storage">int</span> pass = <span class="Number">0</span>;
+      <span class="Storage">int</span> fail = <span class="Number">0</span>;
+      <span class="Keyword">for</span> (<span class="LibraryClassType">Method</span> method : methods) {
+         <span class="Keyword">if</span> (method.isAnnotationPresent(<span class="Storage">Test</span>.<span class="Storage">class</span>)) {
+            <span class="Comment"><span class="Comment">//</span> this is how you access to the attributes</span>
+            <span class="Storage">Test</span> test = method.getAnnotation(<span class="Storage">Test</span>.<span class="Storage">class</span>);
+            <span class="LibraryClassType">Class</span> expected = test.expected();
+            <span class="Keyword">try</span> {
+               method.invoke(<span class="BuiltInConstant">null</span>);
+               pass<span class="Keyword">++</span>;
+            } <span class="Keyword">catch</span> (<span class="LibraryClassType">Exception</span> e) {
+               <span class="Keyword">if</span> (<span class="LibraryClassType">Exception</span>.<span class="Storage">class</span> <span class="Keyword">!=</span> expected) {
+                  fail<span class="Keyword">++</span>;
+               } <span class="Keyword">else</span> {
+                  pass<span class="Keyword">++</span>;
+               }
+            }
+         }
+      }
+   }
+} 
+</pre>
+  <p>
+    <em>Edit:</em> Also after receiving some emails, I guess I should add a full working example :) So here is one.
+    Just copy paste and run the show :) </p>
+  <pre class="idle">@<span class="LibraryClassType">Target</span>(<span class="LibraryClassType">ElementType</span>.<span class="UserDefinedConstant">METHOD</span>)
+@<span class="LibraryClassType">Retention</span>(<span class="LibraryClassType">RetentionPolicy</span>.<span class="UserDefinedConstant">RUNTIME</span>)
+@<span class="Storage">interface</span> <span class="Storage">Test</span> {
+   <span class="LibraryClassType">String</span> info() <span class="Keyword">default</span> <span class="String"><span class="String">"</span><span class="String">"</span></span>;
+}
+<span class="Storage">class</span> <span class="TypeName">Annotated</span> {
+   @<span class="Storage">Test</span>(info = <span class="String"><span class="String">"</span>AWESOME<span class="String">"</span></span>)
+   <span class="Storage">public </span><span class="Storage">void</span> <span class="FunctionName">foo</span>(<span class="LibraryClassType">String</span> myParam) {
+      <span class="LibraryClassType">System</span>.out.println(<span class="String"><span class="String">"</span>This is <span class="String">"</span></span> <span class="Keyword">+</span> myParam);
+   }
+}
+<span class="Storage">class</span> <span class="TypeName">TestAnnotationParser</span> {
+   <span class="Storage">public </span><span class="Storage">void</span> <span class="FunctionName">parse</span>(<span class="LibraryClassType">Class</span>&gt; clazz) <span class="Keyword">throws</span> <span class="LibraryClassType">Exception</span> {
+      <span class="LibraryClassType">Method</span>[] methods = clazz.getMethods();
+      <span class="Keyword">for</span> (<span class="LibraryClassType">Method</span> method : methods) {
+         <span class="Keyword">if</span> (method.isAnnotationPresent(<span class="Storage">Test</span>.<span class="Storage">class</span>)) {
+            <span class="Storage">Test</span> test = method.getAnnotation(<span class="Storage">Test</span>.<span class="Storage">class</span>);
+            <span class="LibraryClassType">String</span> info = test.info();
+            <span class="Keyword">if</span> (<span class="String"><span class="String">"</span>AWESOME<span class="String">"</span></span>.equals(info)) {
+                <span class="LibraryClassType">System</span>.out.println(<span class="String"><span class="String">"</span>info is awesome!<span class="String">"</span></span>);
+                <span class="Comment"><span class="Comment">//</span> try to invoke the method with param</span>
+                method.invoke(
+                   <span class="Storage">Annotated</span>.<span class="Storage">class</span>.newInstance(),
+                   info
+                );
+            }
+         }
+      }
+   }
+}
+<span class="Storage">public </span><span class="Storage">class</span> <span class="TypeName">Demo</span> {
+   <span class="Storage">public static </span><span class="Storage">void</span> <span class="FunctionName">main</span>(<span class="LibraryClassType">String</span>[] args) <span class="Keyword">throws</span> <span class="LibraryClassType">Exception</span> {
+      <span class="Storage">TestAnnotationParser</span> parser = <span class="Keyword">new</span> <span class="Storage">TestAnnotationParser</span>();
+      parser.parse(<span class="Storage">Annotated</span>.<span class="Storage">class</span>);
+   }
+} 
+</pre>
+</article></section><div id="disqus_thread">
+        </div>
+        <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.6.3/jquery.min.js" type="text/javascript">
+        </script><script src="http://www.livefyre.com/wjs/v1.0/javascripts/livefyre_init.js" type="text/javascript">
+        </script><script type="text/javascript">!window.jQuery && document.write('<script src="/javascripts/jquery.min.js"><\/script>')
+          var fyre = LF({
+              site_id: 289922,
+              version: '1.0'
+          });</script>
+</div>
+    </div>
+<footer><p>Copyrighted © 2011</p>
+    </footer>
+</body>
+</html>

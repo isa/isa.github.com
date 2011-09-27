@@ -1,0 +1,243 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<meta charset="utf-8">
+<meta content="Isa Goksu's Blog" name="description">
+<meta content="Isa Goksu" name="author">
+<link href="/images/favicon.png" rel="icon" type="image/png">
+<link href="/images/favicon.png" rel="shortcut icon" type="image/png">
+<link href="/images/favicon.png" rel="apple-touch-icon" type="image/png">
+<link type="text/css" rel="stylesheet" media="all" href="/stylesheets/styles.combined.css?1317073593">
+<!--[if lt IE 9]><script src="http://html5shim.googlecode.com/svn/trunk/html5.js">
+    </script><link type="text/css" rel="stylesheet" media="all" href="/stylesheets/ie.css?1317021298" /><![endif]--><script src="http://use.typekit.com/vew8tjo.js" type="text/javascript">
+    </script><script type="text/javascript">try{Typekit.load();}catch(e){}</script><title>Simple and Pragmatic Thoughts by Isa Goksu</title>
+</head>
+<body>
+    <div id="main">
+      <header id="on-top"></header><div id="content">
+<h1>ISAGOKSU</h1>
+        <nav id="menu"><ul>
+<li>
+              <a class="active" href="/">home</a>
+            </li>
+            <li class="even">/</li>
+            <li>
+              <a href="https://github.com/isa">projects</a>
+            </li>
+            <li class="even">/</li>
+            <li>
+              <a href="http://zerp.ly/IsaGoksu">about</a>
+            </li>
+          </ul></nav><div id="page-header">
+          <p class="signature">ig</p>
+          <hr class="signature-line">
+</div>
+<section id="articles"><article id="detail"><header>Act Like a Senior Developer - About Clean Code</header><p class="date">› November 25, 2009</p>
+  <p class="brief">Today it was a hard day for me. As usual, I was looking at a mess around our code base. And the worst thing was that the code that I saw today was not a <em>legacy code</em>:S </p>
+  <p>It has enough <u>test coverage</u> and moreover the system was working well. The problem was the conditional logics used all over
+    the place. It is almost impossible to follow what's happening and where :S Me and my colleague
+    spent 2 whole days trying to understand what the heck was going on. Finally we figured it out
+    and did what we wanted to do initially. </p>
+  <p>Here, I wanna just stop and speak loudly to all the developers that call themselves <strong>senior</strong> or <strong>principal</strong> or <strong>if (experience != Experiences.JUNIOR):</strong>
+  </p>
+  <p>People, what's wrong with us? How come newly implemented code base is turning into a mess this
+    fast? How come we're allowing such a mess when we see it slowly approaching us like a monster?
+    But of course, when it comes to the interviews, we have to ask candidates questions around design
+    patterns, real-time problem solving skills, test driven design, and refactoring. And seriously
+    is this why we were asking these questions? I'm so emberassed and ashamed of being a <strong>senior</strong> guy today. </p>
+  <p>Anyways, long story short, here is a 5 minute crash course about what we forget to foresee: </p>
+  <h2>1. Evil Ifs</h2>
+  <p>As a <strong>senior</strong> guy, you have to be aware of ifs are evil in most cases. For those who forgot, here is a quick
+    do not forget list: </p>
+  <h3>allow them when:</h3>
+  <p>Condition can be expressed without <em>AND, OR</em> operators: i.e </p>
+  <pre class="idle"><span class="Keyword">if</span> (myContainer.hasItems()) {
+   <span class="Comment"><span class="Comment">//</span>...</span>
+} 
+</pre>
+  <p>Condition is about an encapsulated field: i.e </p>
+  <pre class="idle"><span class="Keyword">if</span> (_isVisible) {
+      <span class="Comment"><span class="Comment">//</span>...</span>
+} 
+</pre>
+  <p>Condition is non-float numerical comparison: i.e </p>
+  <pre class="idle"><span class="Keyword">if</span> (myCertificates.count() <span class="Keyword">&gt;</span> <span class="Number">3</span>) {
+      <span class="Comment"><span class="Comment">//</span>...</span>
+} 
+</pre>
+  <h3>be cautious:</h3>
+  <p>When there is one or two _AND_, _OR_ operators: i.e </p>
+  <pre class="idle"><span class="Keyword">if</span> (_isVisible <span class="Keyword">&amp;&amp;</span> <span class="Keyword">!</span>isParent) {
+   <span class="Comment"><span class="Comment">//</span>...</span>
+}
+<span class="Comment"><span class="Comment">//</span> SOLUTION: refactor (extract method, extract local variable, etc) </span>
+</pre>
+  <p>When there is negative logic: i.e </p>
+  <pre class="idle"><span class="Keyword">if</span> (<span class="Keyword">!</span>_iAmSenior) {
+   <span class="Comment"><span class="Comment">//</span>...</span>
+}
+<span class="Comment"><span class="Comment">//</span> SOLUTION: refactor (make it positive like iAmJunior;</span>
+<span class="Comment"><span class="Comment">//</span> positive statements are easy to understand) </span>
+</pre>
+  <p>When there is a very long condition: i.e </p>
+  <pre class="idle"><span class="Keyword">if</span> (myAwesomeServiceImpl.findExtremelyImportantSomething()
+                               .equals(myLocalExtremelyImportantThing)) {
+      <span class="Comment"><span class="Comment">//</span>...</span>
+}
+<span class="Comment"><span class="Comment">//</span> SOLUTION: refactor (make it short or extract local variable,</span>
+<span class="Comment"><span class="Comment">//</span> trust me your application is not at the point where you should</span>
+<span class="Comment"><span class="Comment">//</span> worry about memory or CPU cycles) </span>
+</pre>
+  <p>When there is a if/else statement: i.e </p>
+  <pre class="idle"><span class="Keyword">if</span> (_isVisible) {
+   number = getNumberFromMoon();
+} <span class="Keyword">else</span> {
+   number = <span class="Number">1</span>;
+}
+<span class="Comment"><span class="Comment">//</span> this creates more than 2 execution paths within one method,</span>
+<span class="Comment"><span class="Comment">//</span> make sure you force all the possibilities to block above logic</span>
+<span class="Comment"><span class="Comment">//</span> SOLUTION: get rid of the second part if possible as in:</span>
+number = <span class="Number">1</span>;
+<span class="Keyword">if</span> (_isVisible) {
+   number = getNumberFromMoon();
+}
+<span class="Comment"><span class="Comment">//</span> if it is not this simple, then make sure you created</span>
+<span class="Comment"><span class="Comment">//</span> two different executions paths (with different</span>
+<span class="Comment"><span class="Comment">//</span> methods/classes) before coming to this point </span>
+</pre>
+  <h3>don't allow please</h3>
+  <p>When it is a null check: </p>
+  <pre class="idle"><span class="Keyword">if</span> (item <span class="Keyword">!=</span> <span class="BuiltInConstant">null</span>) {
+   <span class="Comment"><span class="Comment">//</span> do something...</span>
+}
+<span class="Comment"><span class="Comment">//</span> SOLUTION: find the cause of null and eliminate it. </span>
+</pre>
+  <p>For more information on this topic, please read <a href="http://isagoksu.com/2009/development/java/how-to-avoid-nullpointerexceptions-npe/">my other post</a> about null pointer exceptions. </p>
+  <p> When there is more than two <em>AND</em>, <em>OR</em>, <em>NOT</em> operators: i.e </p>
+  <pre class="idle"><span class="Keyword">if</span> ((_isVisible <span class="Keyword">&amp;&amp;</span> <span class="Keyword">!</span>isParent) <span class="Keyword">||</span> iAmMaster <span class="Keyword">||</span> youCanPassIsSet) {
+   <span class="Comment"><span class="Comment">//</span> do something...</span>
+}
+<span class="Comment"><span class="Comment">//</span> SOLUTION: For God's sake! you have to refactor this code.</span>
+<span class="Comment"><span class="Comment">//</span> The least you can do is extracting a method out of it</span>
+<span class="Comment"><span class="Comment">//</span> if you don't know any design patterns to apply. Check below:</span>
+<span class="Keyword">if</span> (isValid()) {
+   <span class="Comment"><span class="Comment">//</span> do something...</span>
+} 
+</pre>
+  <p>When there is nested if/else statement: i.e </p>
+  <pre class="idle"><span class="Keyword">if</span> (isThisTrue) {
+   <span class="Keyword">if</span> (checkIfHeIsTheMaster() <span class="Keyword">&amp;&amp;</span> <span class="Keyword">!</span>hmmmThisSeemsWeird()) {
+      <span class="Comment"><span class="Comment">//</span> do something...</span>
+   } <span class="Keyword">else</span> {
+      <span class="Comment"><span class="Comment">//</span> do something else...</span>
+   }
+} <span class="Keyword">else</span> {
+   <span class="Comment"><span class="Comment">//</span> this is just ugly...</span>
+}
+<span class="Comment"><span class="Comment">//</span> SOLUTION: Use well known OOP technique called *POLYMORPHISM*,</span>
+<span class="Comment"><span class="Comment">//</span> or if the operator is one of (&gt;, &lt;, ==) then various possible</span>
+<span class="Comment"><span class="Comment">//</span> design patterns like Strategy (behavior modification),</span>
+<span class="Comment"><span class="Comment">//</span> Visitor (context evaluation) or Specification (item selection).</span>
+<span class="Comment"><span class="Comment">//</span> If you're not happy, but you don't know what to do then talk</span>
+<span class="Comment"><span class="Comment">//</span> to someone you think he/she might know. </span>
+</pre>
+  <p>Also if you are the maintainer of the code base then you might wanna introduce static
+    code analyzers like <abbr>PMD</abbr>. They can easily detect <strong>cyclomatic complexities.</strong>
+  </p>
+  <p>Anyways, you guys can easily figure it out. You are welcome to introduce new ones. These are
+    just some that I can think of in the middle of the night. </p>
+  <h2>2. Stupid Loops</h2>
+  <p>Folks, if you're introducing loops to your logic, please make sure that you really need them.
+    Please check the code snippets and the solutions below; I don't wanna comment more about this: </p>
+  <pre class="idle"><span class="Keyword">for</span> (<span class="Storage">int</span> i=<span class="Number">0</span>; i <span class="Keyword">&lt;</span> <span class="Number">2</span>; i<span class="Keyword">++</span>) {
+   <span class="Keyword">if</span> (i <span class="Keyword">==</span> <span class="Number">0</span>) {
+      doThis();
+   } <span class="Keyword">else</span> <span class="Keyword">if</span> (i <span class="Keyword">==</span> <span class="Number">1</span>) {
+      doThat();
+   }
+}
+<span class="Comment"><span class="Comment">//</span> SOLUTION: how about this? You don't need loop there :S</span>
+doThis();
+doThat(); 
+</pre>
+  <p>One more:</p>
+  <pre class="idle">item = <span class="BuiltInConstant">null</span>;
+<span class="Keyword">for</span> (<span class="Storage">int</span> i=<span class="Number">0</span>; i <span class="Keyword">&lt;</span> items.size(); i<span class="Keyword">++</span>) {
+   <span class="Keyword">if</span> (isVisible(items.get(i))) {
+      item = items.get(i);
+   }
+}
+<span class="Keyword">return</span> item;
+<span class="Comment"><span class="Comment">//</span> SOLUTION: how about this? returning values directly?</span>
+<span class="Keyword">for</span> (<span class="Storage">int</span> i=<span class="Number">0</span>; i <span class="Keyword">&lt;</span> items.size(); i<span class="Keyword">++</span>) {
+   <span class="Keyword">if</span> (isVisible(items.get(i))) { <span class="Comment"><span class="Comment">//</span> EDIT from user comments</span>
+      <span class="Keyword">return</span> items.get(i);
+   }
+}
+<span class="Keyword">return</span> <span class="BuiltInConstant">null</span>; <span class="Comment"><span class="Comment">//</span> if possible even return new NullItem() </span>
+</pre>
+  <p>And please.. Very pretty please, stay the F away from the nested loops. I don't wanna even talk about it. </p>
+  <h2>3. Dependency Injections</h2>
+  <p>Woov, this one is an advanced topic ah? Everyone loves dependency injection. Spring sort of
+    frameworks are even forcing you to do it this way right? Let me tell you something; I believe
+    after go-to statements, this one is the most misinterpreted topic in programming history. We <strong>senior</strong> guys somehow convinced ourselves to something like this: </p>
+  <blockquote>If you can inject it's cost free! </blockquote>
+  <p>Man... just don't do this please. Everything has a cost.
+    This is just a way to ease/loose your tight connections with your dependencies. Don't try to interpret otherwise. </p>
+  <p>And second thing is the famous <em>setter injection.</em> So if you have a setter injection set up there, it means don't worry. It's like we can't think
+    otherwise :S Opppss. Stop here! It is not like that at all if you still couldn't figure it out.
+    Setter injection and Constructor injection are 2 well known ways of doing this (there are other
+    ways too). Each of them has its own advantages/disadvantages. However, let's be honest.
+    Constructor injection is much more declarative than setter injection. </p>
+  <p>Anyways, it'a very big debate. I'm kinda scared :P People are gonna be offended again. I just wanna
+    say that if possible please try to use constructor injection in your custom code. If you don't
+    believe me, then refer to Martin Fowler's <a href="http://martinfowler.com/articles/injection.html#ConstructorInjectionWithPicocontainer">IOC Article</a> or Misko Hevery's <strong>Clean Code</strong> talks at Google, such as <a href="http://www.youtube.com/watch?v=RlfLCWKxHJ0">Don't Look For Things</a>. </p>
+  <h2>4. So Many Dependencies</h2>
+  <p>Just a tiny comment here. Folks, try reading <abbr>SOLID</abbr> principles, ok. DON'T CREATE this much dependency :S The class itself is screaming at you: </p>
+  <blockquote>I can't carry this much! You won't be able to test this, I've more than 1000 lines, You can't use constructor injection anymore! </blockquote>
+  <p>Bottom line, if you have so many dependencies, please try to find a way to separate concerns. </p>
+  <h2>5. So Many Parameters</h2>
+  <p>You have more than 3-4 arguments? Re-consider that code. Probably you don't need that. I'm sure
+    you can pull up something from that method or at least extract and call separately. </p>
+  <h2>6. Pass What You Need</h2>
+  <p>This bugs me a lot. Look at this: </p>
+  <pre class="idle">calculateLoanForSomething(<span class="Storage">Account</span>, <span class="Storage">Customer</span>, <span class="Storage">World</span>);
+<span class="Comment"><span class="Comment">//</span> here is the method</span>
+<span class="Storage">void</span> <span class="FunctionName">calculateLoanForSomething</span>(<span class="Storage">Account</span> a, <span class="Storage">Customer</span> c, <span class="Storage">World</span> w) {
+   <span class="Keyword">if</span> (w.date.time.hour <span class="Keyword">==</span> <span class="Number">11</span>) {
+      <span class="Comment"><span class="Comment">//</span> do something here..</span>
+   }
+}
+<span class="Comment"><span class="Comment">//</span> Why r u sending God objects everywhere :S</span>
+<span class="Storage">void</span> <span class="FunctionName">calculateLoanForSomething</span>(<span class="Storage">Account</span> a, <span class="Storage">Customer</span> c, <span class="Storage">int</span> hour) { } 
+</pre>
+  <h2>7. Long Classes/Methods</h2>
+  <p>Here is my rule of thumb: </p>
+  <ul>
+<li>Is it more than 20 lines? Refactor</li>
+    <li>Is it more than 10 methods? Refactor</li>
+    <li>Is it more than 5 package? Refactor</li>
+    <li>Your colleague is coding? Please pair with him/her as much as you can especially if you
+      think he/she is gonna introduce something bad. At least you can teach him/her or prevent
+      things from happening. </li>
+  </ul>
+<p>I don't know if you guys are agree with me or not. I was so ashamed today and wanted to write
+    this. It was more like a self relaxation. Please don't mind if I used a wrong sentence or
+    anything. It's almost 2AM and I'm so tired. </p>
+  <p>For more deeper information about these topics, please refer to Refactoring Book or <a href="http://refactoring.com">site</a>, <a href="http://butunclebob.com/ArticleS.UncleBob.PrinciplesOfOod">SOLID Principles</a>, Clean Code talks, Clean Code  <a href="http://www.amazon.com/Clean-Code-Handbook-Software-Craftsmanship/dp/0132350882">book</a>. </p>
+</article></section><div id="disqus_thread">
+        </div>
+        <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.6.3/jquery.min.js" type="text/javascript">
+        </script><script src="http://www.livefyre.com/wjs/v1.0/javascripts/livefyre_init.js" type="text/javascript">
+        </script><script type="text/javascript">!window.jQuery && document.write('<script src="/javascripts/jquery.min.js"><\/script>')
+          var fyre = LF({
+              site_id: 289922,
+              version: '1.0'
+          });</script>
+</div>
+    </div>
+<footer><p>Copyrighted © 2011</p>
+    </footer>
+</body>
+</html>
