@@ -15,18 +15,6 @@ html
             script type='text/javascript' src='http://www.livefyre.com/wjs/v1.0/javascripts/livefyre_init.js'
             javascript:
                !window.jQuery && document.write('<script src="/javascripts/jquery.min.js"><\/script>')
-               $(document).ready(function() {
-                  $(function(){
-                     $("pre").hover(function() {
-                        var codeInnerWidth = $("code", this).width() + 10;
-                        if (codeInnerWidth > 640) {
-                           $(this).stop(true, false).css({zIndex:"99",position:"relative",overflow:"hidden"}).animate({width:codeInnerWidth+"px"});
-                        }
-                     }, function() {
-                        $(this).stop(true, false).animate({width:640});
-                     });
-                  });
-               });
                var fyre = LF({
                    site_id: 289922,
                    version: '1.0'

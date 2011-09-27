@@ -1,0 +1,42 @@
+article#detail
+   header Generating Lorem Ipsums in Django Templates
+   p.date &rsaquo; September 19, 2009
+
+   p.brief
+      ' When we first attempt create our web applications, most of us use a common printing phrase which starts with
+      em Lorem Ipsum
+      '  words in our templates.
+
+   p
+      ' Today while I was reading something in the Django documentation, and surprisingly I came across
+        with this very useful
+      == link_to "module", "http://docs.djangoproject.com/en/dev/ref/contrib/webdesign/"
+      ' . Honestly, I didn't even know Django has such a thing. After seeing this module, I again thought
+        about how much I love Django :)
+
+   p Anyways, the idea is generating this placeholder words in your template by using a template tag. Here is the usage:
+
+   pre
+      ' ::html_django::
+        &lt;!--
+            make sure you&#39;re loading webdesign module
+            by writing {% load webdesign %}
+        --&gt;
+        &lt;div id=&#39;my-text-area&#39;&gt;
+           {% lorem %}
+           &lt;!--
+               This will be replaced with &quot;Lorem ipsum dolor
+               sit amet, consectetur adipiscing elit...&quot;
+           --&gt;
+        &lt;/div&gt;
+        &lt;input type=&#39;text&#39; name=&#39;name&#39; value=&#39;{% lorem 2 w random %}&#39; /&gt;
+        &lt;!-- This will be replaced with 2 random latin words --&gt;
+        &lt;div id=&#39;description&#39;&gt;
+           {% lorem 5 p %}
+           &lt;!--
+               This will be replaced with
+               5 paragraphs of &quot;Lorem Ipsum..&quot; text
+           --&gt;
+        &lt;/div&gt;
+
+   p Isn't Django awesome :) It has everything you need!
