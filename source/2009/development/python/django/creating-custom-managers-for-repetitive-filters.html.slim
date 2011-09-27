@@ -1,0 +1,106 @@
+article#detail
+   header Creating Custom Managers For Repetitive Filters
+   p.date &rsaquo; September 30, 2009
+
+   p.brief
+      | Today I was trying to do something in Django and I've noticed that I'm using lots of filter in
+        my views. And most of the filters were same, but for different purposes.
+
+   p
+      ' Then I felt like
+      == link_to "DRY", "http://en.wikipedia.org/wiki/DRY"
+      '  principle is screaming at me. So I started to think that maybe there is a way to prevent these
+        repetitions. And like all other problems in the world, the solution was just in front of my eyes:)
+
+   p
+      ' So let's say that we've a model class that represents Employees in the company which includes even
+        retired ones. To reach the all employees, you would use:
+
+   pre
+      ' ::python::
+        Employee.objects.all()
+
+   p
+      ' And if you want to work with retired employees:
+
+   pre
+      ' ::python::
+        Employee.objects.filter(status=Employee.RETIRED)
+
+   p
+      ' This would give you the all retired employees. If you're working with this object list frequently,
+        you might want to introduce a custom manager.
+
+   h2 Custom Managers
+
+   p
+      ' Before going into the custom managers, I'd like to first explain where this
+      em Employee.objects
+      '  comes from.
+      em objects
+      |  attribute is an instance of a special class called Manager (
+      em django.db.models.Manager
+      ' ). The basic idea is to provide common db operations via this attribute, e.g
+      em all()
+      ' ,
+      em filter()
+      ' , etc.. You can find the full documentation from
+      == link_to "here", "http://docs.djangoproject.com/en/dev/topics/db/models/"
+      ' . If you don't specify any custom managers, Django automatically adds this default manager to
+        your model class.
+
+   p
+      ' Custom managers on the other hand is the extended version of this manager class. And creating a
+        custom manager is fairly easy:
+
+   pre
+      ' ::python::
+        class MyModel(models.Model):
+           myfield = models.CharField(max_length=50)
+           object_provider = models.Manager()
+
+   p
+      ' So above model's
+      em object_provider
+      '  attribute would act exactly same as the default manager since they're same. Please check
+        below usages:
+
+   pre
+      ' ::python::
+        '''
+          Below usages would provide same results.
+        '''
+        MyModel.objects.all()
+        MyModel.object_provider.all()
+
+   p
+      ' So how to customize this manager then? Again, very easy. Just extend the
+      em django.db.models.Manager
+      '  class. So let's look at the following code:
+
+   pre
+      ' ::python::
+        class RetiredEmployeeManager(models.Manager):
+           def get_query_set(self):
+              return super(RetiredEmployeeManager, self).get_query_set().filter(status=Employee.RETIRED)
+
+   p
+      ' From this point, the only thing you need to do is defining this manager as your manager.
+
+   pre
+         ' ::python::
+           class Employee(models.Model):
+              name = models.CharField(max_length=50)
+              objects = models.Manager()
+              retired_ones = RetiredEmployeeManager()
+
+   p
+      ' And finally, you can use your new manager in your views:
+
+   pre
+      ' ::python::
+        Employee.retired_ones.all();
+
+   p
+      ' Hope it helps you to clean up some duplicated code!
+

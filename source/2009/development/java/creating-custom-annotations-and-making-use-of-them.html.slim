@@ -1,0 +1,246 @@
+article#detail
+   header Creating Custom Annotations and Using Them
+   p.date &rsaquo; October 7, 2009
+
+   p.brief
+      ' Okay, here is another topic that I couldn't find much information in the Internet :)
+        So I guess I'm gonna cover it quickly.
+
+   h2 How to Create a Custom Annotations?
+
+   p
+      ' There are a lot of documentation about this part in the Internet. All you have to do is
+        basically creating an annotation class like below:
+
+   pre
+      ' ::java::
+        public @interface Copyright {
+            String info() default "";
+        }
+
+   p
+      ' And that's it. Now it's ready to use! Now you can put copyright information to your classes :)
+        Since we didn't define any
+      em @Target
+      '  , you can use this annotation anywhere in your classes by default. If you want your annotation
+        to be only available for class-wise or method-wise, you should define
+      em @Target
+      '  annotation. Here is a little table of what options are available:
+
+   ul
+      li
+         strong @Target(ElementType.PACKAGE)
+         ' , package header
+      li
+         strong @Target(ElementType.TYPE)
+         ' , class header
+      li
+         strong @Target(ElementType.CONSTRUCTOR)
+         ' , constructor header
+      li
+         strong @Target(ElementType.METHOD)
+         ' , method header
+      li
+         strong @Target(ElementType.FIELD)
+         ' , for class fields only
+      li
+         strong @Target(ElementType.PARAMATER)
+         ' , for method parameters only
+      li
+         strong @Target(ElementType.LOCAL_VARIABLE)
+         ' , for local variables only
+
+   p
+      ' If you want your annotation to be available in more than one place, just use array syntax as in:
+
+   pre
+      ' ::java::
+        @Target({ ElementType.PARAMETER, ElementType.LOCAL_VARIABLE })
+
+   p
+      ' One thing you may already notice is annotations are interfaces, so you don't implement
+        anything in them.
+
+   h2 How to Make Use of Your Custom Annotations?
+
+   p
+      ' Up to here, you can find lots of examples. Okaaay, now let's do something useful :) For instance,
+        let's re-implement JUnit's
+      em @Test
+      '  annotation. As you guys already know,
+      em @Test
+      '  annotation is a marker annotation. Basically it marks the method as test method. If you're
+        expecting any exceptions, you would set
+      em expect
+      '  attribute in the annotation. You can try anything here, I'm just using this example since
+        everyone knows how
+      em @Test
+      '  annotation works.
+
+   p First let's define our annotation:
+
+   pre
+      ' ::java::
+        @Target(ElementType.METHOD)
+        @Retention(RetentionPolicy.RUNTIME)
+        public @interface Test {
+           Class expected();
+        }
+
+   p
+      ' You might notice that I used
+      em @Retention
+      ' . This annotation marks our annotation to be retained by JVM at runtime. This will allow us to
+        use Java reflections later on.
+
+   p
+      ' Now we need to write our annotation parser class. This class will parse our annotation and
+        trigger some other invocations related to what we want. Keep in mind that if you have more
+        than one custom annotation, then it's also wise to have separate parsers for each annotation
+        you define. So I'll create one for this! The basic idea behind the annotation parser is using
+        Java reflections to access the annotation information/attributes etc. So here is an example parser
+        for our
+      em @Test
+      '  annotation:
+
+   pre
+      ' ::java::
+        public class TestAnnotationParser {
+           public void parse(Class&lt;?&gt; clazz) throws Exception {
+              Method[] methods = clazz.getMethods();
+              int pass = 0;
+              int fail = 0;
+              for (Method method : methods) {
+                 if (method.isAnnotationPresent(Test.class)) {
+                    try {
+                       method.invoke(null);
+                       pass++;
+                    } catch (Exception e) {
+                       fail++;
+                    }
+                 }
+              }
+           }
+        }
+
+   p
+      ' That's all you need. You parser is ready to use too. But wait a minute, we didn't implement
+        anything about the annotation attributes. This part is a bit tricky. Because you cannot directly
+        access those attributes from the object graph. Luckily invocation helps us here. You can only
+        access these attributes by invoking them. Sometimes you might need to cast the class to the
+        annotation type too. I'm sure you'll figure out when you see it:) Anyways here is a bit more
+        logic to take our
+      strong expected
+      '  attribute into account:
+
+   pre
+      ' ::java::
+        // ...
+        // this is how you access to the attributes
+        Test test = method.getAnnotation(Test.class);
+        // we use Class type here because our attribute type
+        // is class. If it would be string, you'd use string
+        Class expected = test.expected();
+        try {
+           method.invoke(null);
+           pass++;
+        } catch (Exception e) {
+           if (Exception.class != expected) {
+               fail++;
+           } else {
+               pass++;
+           }
+        }
+        // ...
+
+   p
+      ' Now everything is ready to use. Below example demonstrates how you use Parser with
+        your test classes:
+
+   pre
+      ' ::java::
+        public class Demo {
+           public static void main(String [] args) {
+              TestAnnotationParser parser = new TestAnnotationParser();
+              parser.parse(MyTest.class);
+              // you can use also Class.forName
+              // to load from file system directly!
+           }
+        }
+
+   p
+      ' Yeah, I hope you enjoyed. Don't hesitate to put some comments down if you've a better approach?
+        Thanks! Here is the full parser class implementation:
+
+   pre
+      ' ::java::
+        public class TestAnnotationParser {
+           public void parse(Class&lt;?&gt; clazz) throws Exception {
+              Method[] methods = clazz.getMethods();
+              int pass = 0;
+              int fail = 0;
+              for (Method method : methods) {
+                 if (method.isAnnotationPresent(Test.class)) {
+                    // this is how you access to the attributes
+                    Test test = method.getAnnotation(Test.class);
+                    Class expected = test.expected();
+                    try {
+                       method.invoke(null);
+                       pass++;
+                    } catch (Exception e) {
+                       if (Exception.class != expected) {
+                          fail++;
+                       } else {
+                          pass++;
+                       }
+                    }
+                 }
+              }
+           }
+        }
+
+   p
+      em Edit:
+      '  Also after receiving some emails, I guess I should add a full working example :) So here is one.
+        Just copy paste and run the show :)
+
+   pre
+      ' ::java::
+        @Target(ElementType.METHOD)
+        @Retention(RetentionPolicy.RUNTIME)
+        @interface Test {
+           String info() default "";
+        }
+        class Annotated {
+           @Test(info = "AWESOME")
+           public void foo(String myParam) {
+              System.out.println("This is " + myParam);
+           }
+        }
+        class TestAnnotationParser {
+           public void parse(Class<?> clazz) throws Exception {
+              Method[] methods = clazz.getMethods();
+              for (Method method : methods) {
+                 if (method.isAnnotationPresent(Test.class)) {
+                    Test test = method.getAnnotation(Test.class);
+                    String info = test.info();
+                    if ("AWESOME".equals(info)) {
+                        System.out.println("info is awesome!");
+                        // try to invoke the method with param
+                        method.invoke(
+                           Annotated.class.newInstance(),
+                           info
+                        );
+                    }
+                 }
+              }
+           }
+        }
+        public class Demo {
+           public static void main(String[] args) throws Exception {
+              TestAnnotationParser parser = new TestAnnotationParser();
+              parser.parse(Annotated.class);
+           }
+        }
+
+
